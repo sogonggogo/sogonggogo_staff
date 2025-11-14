@@ -6,14 +6,14 @@ import Sidebar from './Sidebar';
 const Layout = styled.div`
   display: flex;
   height: 100vh;
-  background-color: #0a0f19;
+  background-color: #f5f5f5;
 `;
 
 const MainContent = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 127px;
+  margin-left: 64px;
 `;
 
 const ContentArea = styled.div`
@@ -21,27 +21,26 @@ const ContentArea = styled.div`
   padding: 0;
   overflow-y: auto;
 
-  /* 스크롤바 스타일링 - Webkit 브라우저 (Chrome, Safari, Edge) */
+  /* 스크롤바 스타일링 */
   &::-webkit-scrollbar {
     width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #0a0f19;
+    background: var(--background);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #1e2939;
+    background: var(--border);
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #364153;
+    background: var(--accent);
   }
 
-  /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: #1e2939 #0a0f19;
+  scrollbar-color: var(--border) var(--background);
 `;
 
 interface AppLayoutProps {
