@@ -1,73 +1,46 @@
-"use client";
-
-import styled from "@emotion/styled";
-import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
-import OrderHistory from "@/components/OrderHistory";
-import OrderSection from "@/components/OrderSection";
-
-const Container = styled.div`
-  min-height: 100vh;
-  background-color: ${({ theme }) => theme.colors.background};
-`;
-
-const Main = styled.main`
-  padding-top: ${({ theme }) => theme.spacing.headerHeight};
-  padding-left: ${({ theme }) => theme.spacing.section};
-  padding-right: ${({ theme }) => theme.spacing.section};
-  padding-bottom: ${({ theme }) => theme.spacing.xxxl};
-`;
-
-const ContentWrapper = styled.div`
-  max-width: ${({ theme }) => theme.sizes.maxWidth};
-  margin: 0 auto;
-`;
-
-const TopSection = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`;
-
-const HeroWrapper = styled.div`
-  flex: 1;
-`;
-
-const SidebarWrapper = styled.div`
-  width: ${({ theme }) => theme.sizes.sidebarWidth};
-`;
-
-const BottomSection = styled.div`
-  margin-top: ${({ theme }) => theme.spacing.xl};
-`;
-
 export default function Home() {
   return (
-    <Container>
-      <Header />
+    <div style={{ padding: '40px' }}>
+      <h1 style={{
+        fontFamily: 'var(--font-ttangsbudae)',
+        fontWeight: 300,
+        marginBottom: '20px'
+      }}>
+        땅스부대찌개 Light - 미스터 대박 Staff
+      </h1>
 
-      {/* Main Content */}
-      <Main>
-        <ContentWrapper>
-          {/* Top Section: Hero + Order History */}
-          <TopSection>
-            {/* Hero Section */}
-            <HeroWrapper>
-              <HeroSection />
-            </HeroWrapper>
+      <h2 style={{
+        fontFamily: 'var(--font-ttangsbudae)',
+        fontWeight: 500,
+        marginBottom: '20px'
+      }}>
+        땅스부대찌개 Medium - 주문 관리 시스템
+      </h2>
 
-            {/* Order History Sidebar */}
-            <SidebarWrapper>
-              <OrderHistory />
-            </SidebarWrapper>
-          </TopSection>
+      <h3 style={{
+        fontFamily: 'var(--font-ttangsbudae)',
+        fontWeight: 700,
+        marginBottom: '20px'
+      }}>
+        땅스부대찌개 Bold - 직원용 대시보드
+      </h3>
 
-          {/* Bottom Section: Order Cards */}
-          <BottomSection>
-            <OrderSection />
-          </BottomSection>
-        </ContentWrapper>
-      </Main>
-    </Container>
+      <p style={{
+        fontFamily: 'var(--font-miwon)',
+        fontSize: '18px',
+        marginBottom: '20px'
+      }}>
+        미원 폰트 - 특별한 날을 위한 디너 서비스
+      </p>
+
+      <div style={{ marginTop: '40px', padding: '20px', backgroundColor: '#f0f0f0' }}>
+        <h4 style={{ marginBottom: '10px' }}>사용 방법:</h4>
+        <ul style={{ lineHeight: '1.8' }}>
+          <li><code>font-family: var(--font-ttangsbudae)</code> - 땅스부대찌개 폰트</li>
+          <li><code>font-family: var(--font-miwon)</code> - 미원 폰트</li>
+          <li>땅스부대찌개: <code>font-weight: 300</code> (Light), <code>500</code> (Medium), <code>700</code> (Bold)</li>
+        </ul>
+      </div>
+    </div>
   );
 }
