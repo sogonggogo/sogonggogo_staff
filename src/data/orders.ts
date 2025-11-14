@@ -1,0 +1,61 @@
+export interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  status: 'pending' | 'preparing' | 'completed';
+  statusText: string;
+  customer: string;
+  phone: string;
+  address: string;
+  time: string;
+  items: OrderItem[];
+  total: number;
+}
+
+export const mockOrders: Order[] = [
+  {
+    id: 'ORD-001',
+    status: 'pending',
+    statusText: '대기중',
+    customer: '김철수',
+    phone: '010-1234-5678',
+    address: '서울시 강남구 역삼동 123-45',
+    time: '18:30',
+    items: [
+      { name: '미스터 대박 세트', quantity: 2, price: 45000 },
+      { name: '김치찌개', quantity: 1, price: 12000 },
+    ],
+    total: 57000,
+  },
+  {
+    id: 'ORD-002',
+    status: 'preparing',
+    statusText: '조리중',
+    customer: '이영희',
+    phone: '010-2345-6789',
+    address: '서울시 서초구 서초동 456-78',
+    time: '18:45',
+    items: [
+      { name: '부대찌개', quantity: 3, price: 36000 },
+    ],
+    total: 36000,
+  },
+  {
+    id: 'ORD-003',
+    status: 'completed',
+    statusText: '완료',
+    customer: '박민수',
+    phone: '010-3456-7890',
+    address: '서울시 송파구 잠실동 789-12',
+    time: '18:15',
+    items: [
+      { name: '미스터 대박 세트', quantity: 1, price: 22500 },
+      { name: '된장찌개', quantity: 1, price: 11000 },
+    ],
+    total: 33500,
+  },
+];
