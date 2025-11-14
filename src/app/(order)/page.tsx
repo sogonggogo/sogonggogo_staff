@@ -3,11 +3,12 @@
 import styled from '@emotion/styled';
 import { mockOrders } from '@/data/orders';
 import { Minus, Plus } from 'lucide-react';
+import { theme } from '@/styles/theme';
 
 const Container = styled.div`
   display: flex;
   height: 100vh;
-  background: #f5f5f5;
+  background: ${theme.colors.background.primary};
 `;
 
 const MainSection = styled.div`
@@ -18,58 +19,58 @@ const MainSection = styled.div`
 `;
 
 const TopBar = styled.div`
-  background: #2a2a2a;
-  padding: 12px 24px;
+  background: ${theme.colors.background.darker};
+  padding: ${theme.spacing.md} ${theme.spacing.xxl};
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  border-bottom: 1px solid #3a3a3a;
+  color: ${theme.colors.text.white};
+  border-bottom: 1px solid ${theme.colors.border.darker};
 `;
 
 const TableInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: ${theme.spacing.lg};
 `;
 
 const TableBadge = styled.div`
-  background: #4285f4;
-  padding: 6px 16px;
-  border-radius: 6px;
-  font-family: var(--font-miwon);
-  font-size: 14px;
-  font-weight: 600;
+  background: ${theme.colors.brand.blue};
+  padding: ${theme.spacing.sm} ${theme.spacing.lg};
+  border-radius: ${theme.borderRadius.sm};
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.md};
+  font-weight: ${theme.fontWeight.semibold};
 `;
 
 const TableAmount = styled.div`
-  font-family: var(--font-miwon);
-  font-size: 14px;
-  color: #e0e0e0;
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.md};
+  color: ${theme.colors.text.light};
 `;
 
 const DateTime = styled.div`
-  font-family: var(--font-miwon);
-  font-size: 13px;
-  color: #e0e0e0;
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.sm};
+  color: ${theme.colors.text.light};
 `;
 
 const OrderGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-  padding: 20px;
+  gap: ${theme.spacing.lg};
+  padding: ${theme.spacing.xl};
 `;
 
 const OrderCard = styled.div`
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
+  background: ${theme.colors.background.secondary};
+  border-radius: ${theme.borderRadius.lg};
+  padding: ${theme.spacing.xl};
+  box-shadow: ${theme.shadow.sm};
+  transition: ${theme.transition.all};
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: ${theme.shadow.md};
     transform: translateY(-2px);
   }
 `;
@@ -78,78 +79,78 @@ const OrderHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: ${theme.spacing.lg};
+  padding-bottom: ${theme.spacing.md};
+  border-bottom: 2px solid ${theme.colors.border.secondary};
 `;
 
 const OrderTableName = styled.div`
-  font-family: var(--font-ttangsbudae);
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize.lg};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.text.primary};
 `;
 
 const OrderStatus = styled.div`
-  background: #4285f4;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-family: var(--font-miwon);
-  font-size: 12px;
-  font-weight: 600;
+  background: ${theme.colors.brand.blue};
+  color: ${theme.colors.text.white};
+  padding: ${theme.spacing.xs} ${theme.spacing.md};
+  border-radius: ${theme.borderRadius.sm};
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.xs};
+  font-weight: ${theme.fontWeight.semibold};
 `;
 
 const OrderDetail = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
-  font-family: var(--font-miwon);
-  font-size: 14px;
-  color: #333;
+  margin-bottom: ${theme.spacing.sm};
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.md};
+  color: ${theme.colors.text.secondary};
 `;
 
 const OrderLabel = styled.span`
-  color: #666;
+  color: ${theme.colors.text.tertiary};
 `;
 
 const OrderValue = styled.span`
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: ${theme.fontWeight.semibold};
+  color: ${theme.colors.text.primary};
 `;
 
 const OrderActions = styled.div`
   display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
+  gap: ${theme.spacing.sm};
+  margin-top: ${theme.spacing.lg};
+  padding-top: ${theme.spacing.lg};
+  border-top: 1px solid ${theme.colors.border.secondary};
 `;
 
 const TimeControl = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: ${theme.spacing.sm};
   flex: 1;
-  background: #f8f8f8;
-  padding: 8px 12px;
-  border-radius: 8px;
+  background: ${theme.colors.background.light};
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  border-radius: ${theme.borderRadius.md};
 `;
 
 const TimeButton = styled.button`
-  background: white;
-  border: 1px solid #e0e0e0;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  background: ${theme.colors.background.secondary};
+  border: 1px solid ${theme.colors.border.primary};
+  width: ${theme.sizes.buttonSm};
+  height: ${theme.sizes.buttonSm};
+  border-radius: ${theme.borderRadius.sm};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: ${theme.transition.all};
 
   &:hover {
-    background: #f0f0f0;
+    background: ${theme.colors.border.secondary};
     border-color: #ccc;
   }
 
@@ -159,28 +160,28 @@ const TimeButton = styled.button`
 `;
 
 const TimeDisplay = styled.span`
-  font-family: var(--font-miwon);
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.sm};
+  font-weight: ${theme.fontWeight.semibold};
+  color: ${theme.colors.text.secondary};
   flex: 1;
   text-align: center;
 `;
 
 const ConfirmButton = styled.button`
-  background: #4285f4;
-  color: white;
+  background: ${theme.colors.brand.blue};
+  color: ${theme.colors.text.white};
   border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-family: var(--font-miwon);
-  font-size: 14px;
-  font-weight: 600;
+  padding: 10px ${theme.spacing.xxl};
+  border-radius: ${theme.borderRadius.md};
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.md};
+  font-weight: ${theme.fontWeight.semibold};
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: ${theme.transition.all};
 
   &:hover {
-    background: #357ae8;
+    background: ${theme.colors.brand.blueHover};
   }
 
   &:active {

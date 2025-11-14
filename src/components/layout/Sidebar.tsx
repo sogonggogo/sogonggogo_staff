@@ -4,41 +4,42 @@ import styled from '@emotion/styled';
 import { Store, Truck, Package, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { theme } from '@/styles/theme';
 
 const SidebarContainer = styled.aside`
-  width: 64px;
-  background: #1a1a1a;
-  padding: 16px 8px;
+  width: ${theme.sizes.sidebarWidth};
+  background: ${theme.colors.background.dark};
+  padding: ${theme.spacing.lg} ${theme.spacing.sm};
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${theme.spacing.sm};
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  border-right: 1px solid #2a2a2a;
+  border-right: 1px solid ${theme.colors.border.dark};
 `;
 
 const MenuIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
-  color: #ffffff;
-  margin-bottom: 8px;
+  padding: ${theme.spacing.md};
+  color: ${theme.colors.text.white};
+  margin-bottom: ${theme.spacing.sm};
 `;
 
 const Logo = styled.div`
   text-align: center;
-  padding: 12px 0;
-  margin-bottom: 16px;
+  padding: ${theme.spacing.md} 0;
+  margin-bottom: ${theme.spacing.lg};
 `;
 
 const LogoText = styled.h2`
-  font-family: var(--font-ttangsbudae);
-  font-size: 12px;
-  font-weight: 700;
-  color: #4ade80;
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize.xs};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.brand.success};
   line-height: 1.2;
 `;
 
@@ -46,23 +47,26 @@ const NavButton = styled(Link, {
   shouldForwardProp: (prop) => prop !== 'isActive',
 })<{ isActive: boolean }>`
   width: 100%;
-  height: 64px;
-  border-radius: 8px;
-  background-color: ${({ isActive }) => (isActive ? '#2a2a2a' : 'transparent')};
-  border-left: 3px solid ${({ isActive }) => (isActive ? '#4ade80' : 'transparent')};
+  height: ${theme.sizes.navButtonHeight};
+  border-radius: ${theme.borderRadius.md};
+  background-color: ${({ isActive }) =>
+    isActive ? theme.colors.background.darker : 'transparent'};
+  border-left: 3px solid
+    ${({ isActive }) => (isActive ? theme.colors.brand.success : 'transparent')};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: ${theme.spacing.sm};
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: ${({ isActive }) => (isActive ? '#ffffff' : '#888888')};
+  transition: ${theme.transition.all};
+  color: ${({ isActive }) =>
+    isActive ? theme.colors.text.white : theme.colors.text.muted};
   text-decoration: none;
 
   &:hover {
-    background-color: #2a2a2a;
-    color: #ffffff;
+    background-color: ${theme.colors.background.darker};
+    color: ${theme.colors.text.white};
   }
 
   &:active {
@@ -71,9 +75,9 @@ const NavButton = styled(Link, {
 `;
 
 const NavText = styled.span`
-  font-family: var(--font-miwon);
-  font-size: 11px;
-  font-weight: 500;
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize['2xs']};
+  font-weight: ${theme.fontWeight.medium};
   text-align: center;
 `;
 

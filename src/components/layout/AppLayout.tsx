@@ -2,18 +2,19 @@
 
 import styled from '@emotion/styled';
 import Sidebar from './Sidebar';
+import { theme } from '@/styles/theme';
 
 const Layout = styled.div`
   display: flex;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: ${theme.colors.background.primary};
 `;
 
 const MainContent = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 64px;
+  margin-left: ${theme.sizes.sidebarWidth};
 `;
 
 const ContentArea = styled.div`

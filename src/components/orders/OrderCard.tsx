@@ -2,18 +2,19 @@
 
 import styled from '@emotion/styled';
 import { Order } from '@/data/orders';
+import { theme } from '@/styles/theme';
 
 const Card = styled.div`
-  background: var(--card);
-  border: 2px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: ${theme.colors.background.secondary};
+  border: 2px solid ${theme.colors.border.primary};
+  border-radius: ${theme.borderRadius.xl};
+  padding: ${theme.spacing.xxl};
+  transition: ${theme.transition.allNormal};
+  box-shadow: ${theme.shadow.sm};
 
   &:hover {
-    border-color: var(--primary);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: ${theme.colors.brand.primary};
+    box-shadow: ${theme.shadow.lg};
     transform: translateY(-2px);
   }
 `;
@@ -22,95 +23,95 @@ const OrderHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid var(--border);
+  margin-bottom: ${theme.spacing.lg};
+  padding-bottom: ${theme.spacing.lg};
+  border-bottom: 2px solid ${theme.colors.border.primary};
 `;
 
 const OrderId = styled.span`
-  font-family: var(--font-ttangsbudae);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--foreground);
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize['2xl']};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.text.primary};
 `;
 
 const OrderStatus = styled.span<{ status: string }>`
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: ${theme.spacing.sm} ${theme.spacing.lg};
+  border-radius: ${theme.borderRadius.full};
   background-color: ${({ status }) => {
     const colors = {
-      pending: 'var(--secondary)',
-      preparing: '#3B82F6',
-      completed: '#10B981',
+      pending: theme.colors.status.pending,
+      preparing: theme.colors.status.preparing,
+      completed: theme.colors.status.completed,
     };
     return colors[status as keyof typeof colors];
   }};
-  color: #FFFFFF;
-  font-family: var(--font-ttangsbudae);
-  font-size: 14px;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: ${theme.colors.text.white};
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize.md};
+  font-weight: ${theme.fontWeight.bold};
+  box-shadow: ${theme.shadow.button};
 `;
 
 const OrderDetails = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: ${theme.spacing.md};
+  margin-bottom: ${theme.spacing.lg};
 `;
 
 const OrderDetailRow = styled.div`
-  font-family: var(--font-miwon);
-  font-size: 15px;
-  color: var(--foreground);
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.primary};
   display: flex;
-  gap: 8px;
+  gap: ${theme.spacing.sm};
 
   strong {
-    font-weight: 600;
-    color: var(--primary);
+    font-weight: ${theme.fontWeight.semibold};
+    color: ${theme.colors.brand.primary};
     min-width: 80px;
   }
 `;
 
 const OrderItems = styled.div`
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 2px dashed var(--border);
+  margin-top: ${theme.spacing.lg};
+  padding-top: ${theme.spacing.lg};
+  border-top: 2px dashed ${theme.colors.border.primary};
 `;
 
 const OrderItem = styled.div`
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-miwon);
-  font-size: 15px;
-  color: var(--foreground);
-  margin-bottom: 8px;
-  padding: 8px 12px;
-  background: var(--muted);
-  border-radius: 8px;
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.primary};
+  margin-bottom: ${theme.spacing.sm};
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  background: ${theme.colors.background.primary};
+  border-radius: ${theme.borderRadius.md};
 `;
 
 const OrderTotal = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 12px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  border-radius: 12px;
-  font-family: var(--font-ttangsbudae);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--primary-foreground);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: ${theme.spacing.md};
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  background: ${theme.colors.gradientPrimary};
+  border-radius: ${theme.borderRadius.lg};
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize.xl};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.text.white};
+  box-shadow: ${theme.shadow.xl};
 `;
 
 const ItemName = styled.span`
-  font-weight: 600;
+  font-weight: ${theme.fontWeight.semibold};
 `;
 
 const ItemPrice = styled.span`
-  font-weight: 600;
+  font-weight: ${theme.fontWeight.semibold};
 `;
 
 interface OrderCardProps {

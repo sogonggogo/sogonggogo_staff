@@ -1,42 +1,43 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { theme } from '@/styles/theme';
 
 const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 32px;
+  gap: ${theme.spacing.xl};
+  margin-bottom: ${theme.spacing.xxxl};
 `;
 
 const StatCard = styled.div`
-  background: var(--card);
-  border: 2px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  background: ${theme.colors.background.secondary};
+  border: 2px solid ${theme.colors.border.primary};
+  border-radius: ${theme.borderRadius.xl};
+  padding: ${theme.spacing.xxl};
+  box-shadow: ${theme.shadow.sm};
+  transition: ${theme.transition.allNormal};
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    border-color: var(--primary);
+    box-shadow: ${theme.shadow.lg};
+    border-color: ${theme.colors.brand.primary};
   }
 `;
 
 const StatLabel = styled.div`
-  font-family: var(--font-ttangsbudae);
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--muted-foreground);
-  margin-bottom: 12px;
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize.lg};
+  font-weight: ${theme.fontWeight.medium};
+  color: ${theme.colors.text.muted};
+  margin-bottom: ${theme.spacing.md};
 `;
 
 const StatValue = styled.div`
-  font-family: var(--font-ttangsbudae);
-  font-size: 42px;
-  font-weight: 700;
-  color: var(--primary);
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize['7xl']};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.brand.primary};
   line-height: 1;
 `;
 

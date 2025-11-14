@@ -3,11 +3,12 @@
 import styled from '@emotion/styled';
 import { AlertTriangle, TrendingDown, TrendingUp } from 'lucide-react';
 import { InventoryItem } from '@/data/inventory';
+import { theme } from '@/styles/theme';
 
 const InventoryTableWrapper = styled.div`
   background-color: #1e2939;
   border: 1px solid #364153;
-  border-radius: 12px;
+  border-radius: ${theme.borderRadius.lg};
   overflow: hidden;
 `;
 
@@ -22,17 +23,17 @@ const TableHeader = styled.thead`
 `;
 
 const Th = styled.th`
-  padding: 16px;
+  padding: ${theme.spacing.lg};
   text-align: left;
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: ${theme.fontSize.md};
+  font-weight: ${theme.fontWeight.semibold};
   color: #99A1AE;
 `;
 
 const Tr = styled.tr`
   border-bottom: 1px solid #364153;
-  transition: background-color 0.2s;
+  transition: ${theme.transition.fast};
 
   &:hover {
     background-color: rgba(21, 101, 252, 0.05);
@@ -44,34 +45,34 @@ const Tr = styled.tr`
 `;
 
 const Td = styled.td`
-  padding: 16px;
+  padding: ${theme.spacing.lg};
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-size: ${theme.fontSize.md};
   color: #D1D5DC;
 `;
 
 const ItemName = styled(Td)`
-  font-weight: 600;
+  font-weight: ${theme.fontWeight.semibold};
   color: #FFFFFF;
 `;
 
 const CategoryBadge = styled.span`
-  padding: 4px 10px;
-  border-radius: 12px;
+  padding: ${theme.spacing.xs} 10px;
+  border-radius: ${theme.borderRadius.lg};
   background-color: #364153;
   color: #D1D5DC;
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: ${theme.fontSize.xs};
+  font-weight: ${theme.fontWeight.medium};
 `;
 
 const Quantity = styled.span<{ level: string }>`
-  font-weight: 600;
+  font-weight: ${theme.fontWeight.semibold};
   color: ${({ level }) => {
     const colors = {
-      low: '#DC2626',
-      medium: '#F59E0B',
-      good: '#10B981',
+      low: theme.colors.status.danger,
+      medium: theme.colors.status.warning,
+      good: theme.colors.status.completed,
     };
     return colors[level as keyof typeof colors];
   }};
@@ -82,7 +83,7 @@ const StockBadge = styled.span<{ level: string }>`
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  border-radius: 16px;
+  border-radius: ${theme.borderRadius.xl};
   background-color: ${({ level }) => {
     const colors = {
       low: '#DC262620',
@@ -93,15 +94,15 @@ const StockBadge = styled.span<{ level: string }>`
   }};
   color: ${({ level }) => {
     const colors = {
-      low: '#DC2626',
-      medium: '#F59E0B',
-      good: '#10B981',
+      low: theme.colors.status.danger,
+      medium: theme.colors.status.warning,
+      good: theme.colors.status.completed,
     };
     return colors[level as keyof typeof colors];
   }};
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: ${theme.fontSize.xs};
+  font-weight: ${theme.fontWeight.semibold};
 `;
 
 const IconWrapper = styled.span`

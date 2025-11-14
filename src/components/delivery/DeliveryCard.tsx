@@ -3,20 +3,21 @@
 import styled from '@emotion/styled';
 import { MapPin, User, Clock, CheckCircle2 } from 'lucide-react';
 import { Delivery } from '@/data/deliveries';
+import { theme } from '@/styles/theme';
 
 const Card = styled.div<{ status: string }>`
-  background-color: #1e2939;
+  background-color: ${theme.colors.background.dark};
   border: 2px solid ${({ status }) => {
-    const borderColors = {
-      dispatched: '#3B82F6',
-      delivering: '#F59E0B',
-      delivered: '#10B981',
+    const borderColors: Record<string, string> = {
+      dispatched: theme.colors.status.preparing,
+      delivering: theme.colors.status.warning,
+      delivered: theme.colors.status.completed,
     };
-    return borderColors[status as keyof typeof borderColors];
+    return borderColors[status] || theme.colors.border.primary;
   }};
-  border-radius: 12px;
-  padding: 20px;
-  transition: transform 0.2s;
+  border-radius: ${theme.borderRadius.lg};
+  padding: ${theme.spacing.xl};
+  transition: ${theme.transition.fast};
 
   &:hover {
     transform: translateY(-2px);
@@ -27,54 +28,54 @@ const DeliveryHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: ${theme.spacing.lg};
 `;
 
 const OrderNumber = styled.span`
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #FFFFFF;
+  font-family: ${theme.fontFamily.secondary};
+  font-size: ${theme.fontSize.xl};
+  font-weight: ${theme.fontWeight.semibold};
+  color: ${theme.colors.text.white};
 `;
 
 const StatusBadge = styled.span<{ status: string }>`
-  padding: 6px 12px;
-  border-radius: 16px;
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  border-radius: ${theme.borderRadius.full};
   background-color: ${({ status }) => {
-    const colors = {
-      dispatched: '#3B82F620',
-      delivering: '#F59E0B20',
-      delivered: '#10B98120',
+    const colors: Record<string, string> = {
+      dispatched: 'rgba(59, 130, 246, 0.125)',
+      delivering: 'rgba(245, 158, 11, 0.125)',
+      delivered: 'rgba(16, 185, 129, 0.125)',
     };
-    return colors[status as keyof typeof colors];
+    return colors[status] || 'rgba(255, 255, 255, 0.1)';
   }};
   color: ${({ status }) => {
-    const colors = {
-      dispatched: '#3B82F6',
-      delivering: '#F59E0B',
-      delivered: '#10B981',
+    const colors: Record<string, string> = {
+      dispatched: theme.colors.status.preparing,
+      delivering: theme.colors.status.warning,
+      delivered: theme.colors.status.completed,
     };
-    return colors[status as keyof typeof colors];
+    return colors[status] || theme.colors.text.white;
   }};
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
+  font-family: ${theme.fontFamily.secondary};
+  font-size: ${theme.fontSize.xs};
+  font-weight: ${theme.fontWeight.semibold};
 `;
 
 const InfoRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: #D1D5DC;
+  gap: ${theme.spacing.sm};
+  margin-bottom: ${theme.spacing.md};
+  font-family: ${theme.fontFamily.secondary};
+  font-size: ${theme.fontSize.md};
+  color: ${theme.colors.text.light};
 `;
 
 const Icon = styled.div`
-  width: 16px;
-  height: 16px;
-  color: #99A1AE;
+  width: ${theme.sizes.iconSm};
+  height: ${theme.sizes.iconSm};
+  color: ${theme.colors.text.muted};
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -83,25 +84,25 @@ const Icon = styled.div`
 
 const Divider = styled.div`
   height: 1px;
-  background-color: #364153;
-  margin: 16px 0;
+  background-color: ${theme.colors.border.dark};
+  margin: ${theme.spacing.lg} 0;
 `;
 
 const EstimatedTime = styled.div`
   text-align: center;
-  padding: 12px;
-  background-color: #0a0f19;
-  border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: #99A1AE;
+  padding: ${theme.spacing.md};
+  background-color: ${theme.colors.background.darker};
+  border-radius: ${theme.borderRadius.md};
+  font-family: ${theme.fontFamily.secondary};
+  font-size: ${theme.fontSize.md};
+  color: ${theme.colors.text.muted};
 `;
 
 const TimeValue = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin-top: 4px;
+  font-size: ${theme.fontSize['2xl']};
+  font-weight: ${theme.fontWeight.semibold};
+  color: ${theme.colors.text.white};
+  margin-top: ${theme.spacing.xs};
 `;
 
 interface DeliveryCardProps {
@@ -141,7 +142,7 @@ export default function DeliveryCard({ delivery }: DeliveryCardProps) {
       <EstimatedTime>
         {delivery.status === 'delivered' ? (
           <>
-            <CheckCircle2 style={{ display: 'inline-block', width: '20px', height: '20px', color: '#10B981' }} />
+            <CheckCircle2 style={{ display: 'inline-block', width: '20px', height: '20px', color: theme.colors.status.completed }} />
             <TimeValue>배달 완료</TimeValue>
           </>
         ) : (

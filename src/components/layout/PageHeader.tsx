@@ -1,26 +1,27 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { theme } from '@/styles/theme';
 
 const Header = styled.header`
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  padding: 32px 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: ${theme.colors.gradientPrimary};
+  padding: ${theme.spacing.xxxl} ${theme.spacing['4xl']};
+  box-shadow: ${theme.shadow.xl};
 `;
 
 const Title = styled.h1`
-  font-family: var(--font-ttangsbudae);
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--primary-foreground);
-  margin-bottom: 8px;
+  font-family: ${theme.fontFamily.ttangsbudae};
+  font-size: ${theme.fontSize['5xl']};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.text.white};
+  margin-bottom: ${theme.spacing.md};
   letter-spacing: -0.5px;
 `;
 
 const Subtitle = styled.p`
-  font-family: var(--font-miwon);
-  font-size: 16px;
-  color: var(--primary-foreground);
+  font-family: ${theme.fontFamily.miwon};
+  font-size: ${theme.fontSize.lg};
+  color: ${theme.colors.text.white};
   opacity: 0.9;
 `;
 
