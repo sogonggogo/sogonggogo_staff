@@ -1,7 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import PageLayout from '@/components/PageLayout';
+import PageHeader from '@/components/PageHeader';
+import PageContent from '@/components/PageContent';
 import { MapPin, User, Clock, CheckCircle2 } from 'lucide-react';
 import { mockDeliveries } from '@/data/deliveries';
 
@@ -114,8 +115,10 @@ const TimeValue = styled.div`
 
 export default function DeliveryPage() {
   return (
-    <PageLayout title="배달 현황" subtitle="실시간 배달 상황을 모니터링합니다">
-      <DeliveryGrid>
+    <>
+      <PageHeader title="배달 현황" subtitle="실시간 배달 상황을 모니터링합니다" />
+      <PageContent>
+        <DeliveryGrid>
         {mockDeliveries.map((delivery) => (
           <DeliveryCard key={delivery.id} status={delivery.status}>
             <DeliveryHeader>
@@ -161,6 +164,7 @@ export default function DeliveryPage() {
           </DeliveryCard>
         ))}
       </DeliveryGrid>
-    </PageLayout>
+      </PageContent>
+    </>
   );
 }

@@ -1,7 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import PageLayout from '@/components/PageLayout';
+import PageHeader from '@/components/PageHeader';
+import PageContent from '@/components/PageContent';
 import { mockOrders } from '@/data/orders';
 
 // Styled Components
@@ -146,8 +147,10 @@ export default function OrdersPage() {
   const completedCount = mockOrders.filter(o => o.status === 'completed').length;
 
   return (
-    <PageLayout title="주문 관리" subtitle="실시간 주문 현황을 확인하고 관리합니다">
-      <StatsGrid>
+    <>
+      <PageHeader title="주문 관리" subtitle="실시간 주문 현황을 확인하고 관리합니다" />
+      <PageContent>
+        <StatsGrid>
         <StatCard>
           <StatLabel>대기중</StatLabel>
           <StatValue>{pendingCount}</StatValue>
@@ -190,6 +193,7 @@ export default function OrdersPage() {
           </OrderCard>
         ))}
       </OrderList>
-    </PageLayout>
+      </PageContent>
+    </>
   );
 }

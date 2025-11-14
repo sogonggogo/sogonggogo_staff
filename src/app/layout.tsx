@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AppLayout from "@/components/AppLayout";
 
 export const metadata: Metadata = {
   title: "미스터 대박 Staff",
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        {children}
+        <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );

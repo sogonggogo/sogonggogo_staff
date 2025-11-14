@@ -1,7 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import PageLayout from '@/components/PageLayout';
+import PageHeader from '@/components/PageHeader';
+import PageContent from '@/components/PageContent';
 import { AlertTriangle, TrendingDown, TrendingUp } from 'lucide-react';
 import { mockInventory } from '@/data/inventory';
 
@@ -155,8 +156,10 @@ export default function InventoryPage() {
   const totalItems = mockInventory.length;
 
   return (
-    <PageLayout title="재고 관리" subtitle="식자재 재고를 확인하고 관리합니다">
-      <StatsContainer>
+    <>
+      <PageHeader title="재고 관리" subtitle="식자재 재고를 확인하고 관리합니다" />
+      <PageContent>
+        <StatsContainer>
         <StatCard>
           <StatLabel>전체 품목</StatLabel>
           <StatValue>{totalItems}</StatValue>
@@ -219,6 +222,7 @@ export default function InventoryPage() {
           </tbody>
         </Table>
       </InventoryTableWrapper>
-    </PageLayout>
+      </PageContent>
+    </>
   );
 }
