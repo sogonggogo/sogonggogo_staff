@@ -52,8 +52,6 @@ export const theme = {
     primary: '#d62300',
     secondary: '#ffa500',
     accent: '#5c3317',
-    legacyBackground: '#f5f5dc',
-    legacyBorder: '#e5dcc8',
     white: '#ffffff',
     black: '#000000',
 
@@ -181,7 +179,6 @@ export const theme = {
   sizes: {
     // Sidebar
     sidebarWidth: '64px',
-    sidebarWidthOld: '127px',
 
     // Buttons
     buttonSm: '28px',
@@ -196,7 +193,6 @@ export const theme = {
 
     // Cards
     navButtonHeight: '64px',
-    navButtonHeightOld: '80px',
 
     // Legacy
     maxWidth: '1280px',
