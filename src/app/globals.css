@@ -31,6 +31,38 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Nanum Gothic';
+  src: url('/fonts/NanumGothicLight.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nanum Gothic';
+  src: url('/fonts/NanumGothic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nanum Gothic';
+  src: url('/fonts/NanumGothicBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nanum Gothic';
+  src: url('/fonts/NanumGothicExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #f5f5dc;
   --foreground: #171717;
@@ -56,6 +88,7 @@
   --font-mono: var(--font-geist-mono);
   --font-ttangsbudae: 'Ttangsbudae', sans-serif;
   --font-miwon: 'Miwon', serif;
+  --font-nanum-gothic: 'Nanum Gothic', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -91,7 +124,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-nanum-gothic), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

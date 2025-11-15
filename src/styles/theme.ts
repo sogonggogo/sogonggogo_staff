@@ -114,18 +114,21 @@ export const theme = {
   },
 
   fontWeight: {
+    light: 300,
     normal: 400,
     medium: 500,
     semibold: 600,
     bold: 700,
+    extrabold: 800,
     black: 900,
   },
 
   fontFamily: {
+    nanumGothic: 'var(--font-nanum-gothic)',
     ttangsbudae: 'var(--font-ttangsbudae)',
     miwon: 'var(--font-miwon)',
-    primary: "'Arial Black', Arial, sans-serif",
-    secondary: "var(--font-geist-sans), Arial, Helvetica, sans-serif",
+    primary: 'var(--font-nanum-gothic)',
+    secondary: 'var(--font-nanum-gothic)',
   },
 
   borderRadius: {
