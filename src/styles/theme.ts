@@ -1,20 +1,20 @@
 export const theme = {
   colors: {
-    // Background colors (Figma design)
+    // Background colors (Dark Mode)
     background: {
-      primary: '#f5f5f5',
-      secondary: '#ffffff',
+      primary: '#0a0a0a',
+      secondary: '#1a1a1a',
       dark: '#1a1a1a',
       darker: '#2a2a2a',
       darkest: '#3a3a3a',
-      light: '#f8f8f8',
+      light: '#2a2a2a',
     },
 
-    // Text colors
+    // Text colors (Dark Mode)
     text: {
-      primary: '#1a1a1a',
-      secondary: '#333333',
-      tertiary: '#666666',
+      primary: '#ffffff',
+      secondary: '#e0e0e0',
+      tertiary: '#b0b0b0',
       muted: '#888888',
       white: '#ffffff',
       light: '#e0e0e0',
@@ -30,11 +30,11 @@ export const theme = {
       blueHover: '#357ae8',
     },
 
-    // Border colors
+    // Border colors (Dark Mode)
     border: {
-      primary: '#e0e0e0',
-      secondary: '#f0f0f0',
-      light: '#e5dcc8',
+      primary: '#3a3a3a',
+      secondary: '#2a2a2a',
+      light: '#4a4a4a',
       dark: '#2a2a2a',
       darker: '#3a3a3a',
     },
@@ -142,13 +142,13 @@ export const theme = {
   },
 
   shadow: {
-    xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    sm: '0 2px 8px rgba(0, 0, 0, 0.08)',
-    md: '0 4px 16px rgba(0, 0, 0, 0.12)',
-    lg: '0 8px 24px rgba(0, 0, 0, 0.15)',
-    xl: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    '2xl': '0 6px 16px rgba(0, 0, 0, 0.25)',
-    button: '0 2px 8px rgba(0, 0, 0, 0.15)',
+    xs: '0 1px 2px 0 rgba(0, 0, 0, 0.3)',
+    sm: '0 2px 8px rgba(0, 0, 0, 0.4)',
+    md: '0 4px 16px rgba(0, 0, 0, 0.5)',
+    lg: '0 8px 24px rgba(0, 0, 0, 0.6)',
+    xl: '0 4px 12px rgba(0, 0, 0, 0.5)',
+    '2xl': '0 6px 16px rgba(0, 0, 0, 0.7)',
+    button: '0 2px 8px rgba(0, 0, 0, 0.5)',
   },
 
   transition: {
