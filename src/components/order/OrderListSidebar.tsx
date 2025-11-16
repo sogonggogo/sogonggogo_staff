@@ -96,18 +96,59 @@ const OrderItemPrice = styled.div<{ active: boolean }>`
 `;
 
 interface OrderListSidebarProps {
-  newOrders: Order[];
-  inProgressOrders: Order[];
+  orders: Order[];
   selectedOrderId: string | null;
   onSelectOrder: (orderId: string) => void;
+  showCategories?: boolean;
+  categoryTitle?: string;
 }
 
 export default function OrderListSidebar({
-  newOrders,
-  inProgressOrders,
+  orders,
   selectedOrderId,
   onSelectOrder,
+  showCategories = true,
+  categoryTitle = "완료",
 }: OrderListSidebarProps) {
+  if (!showCategories) {
+    // 완료 페이지: 단일 카테고리만 표시
+    return (
+      <Sidebar>
+        <OrderSection>
+          <SectionHeader>
+            <CategorySectionTitle>{categoryTitle}</CategorySectionTitle>
+            <SectionCount>{orders.length}</SectionCount>
+          </SectionHeader>
+          <OrderList>
+            {orders.map((order) => (
+              <OrderListItem
+                key={order.id}
+                active={selectedOrderId === order.id}
+                onClick={() => onSelectOrder(order.id)}
+              >
+                <OrderItemHeader>
+                  <OrderItemId active={selectedOrderId === order.id}>
+                    {order.id}
+                  </OrderItemId>
+                  <OrderItemCount active={selectedOrderId === order.id}>
+                    {order.items.length}개 메뉴
+                  </OrderItemCount>
+                </OrderItemHeader>
+                <OrderItemPrice active={selectedOrderId === order.id}>
+                  {order.total.toLocaleString()}원
+                </OrderItemPrice>
+              </OrderListItem>
+            ))}
+          </OrderList>
+        </OrderSection>
+      </Sidebar>
+    );
+  }
+
+  // 처리중 페이지: 신규/진행 카테고리 표시
+  const newOrders = orders.filter((order) => order.status === "pending");
+  const inProgressOrders = orders.filter((order) => order.status === "preparing");
+
   return (
     <Sidebar>
       {/* 신규 주문 섹션 */}

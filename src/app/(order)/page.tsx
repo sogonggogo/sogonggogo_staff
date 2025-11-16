@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import { mockOrders } from "@/data/orders";
 import { theme } from "@/styles/theme";
 import { useState, useEffect } from "react";
-import TopBar from "@/components/order/TopBar";
+import TopBar, { OrderTab } from "@/components/order/TopBar";
 import OrderListSidebar from "@/components/order/OrderListSidebar";
 import OrderDetail from "@/components/order/OrderDetail";
 
@@ -29,6 +29,7 @@ const MainContent = styled.main`
 `;
 
 export default function OrdersPage() {
+  const [activeTab, setActiveTab] = useState<OrderTab>("processing");
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(
     mockOrders[0]?.id || null
   );
@@ -42,25 +43,45 @@ export default function OrdersPage() {
     return () => clearInterval(timer);
   }, []);
 
-  const newOrders = mockOrders.filter((order) => order.status === "pending");
-  const inProgressOrders = mockOrders.filter(
-    (order) => order.status === "preparing" || order.status === "completed"
-  );
+  // 탭 변경 시 첫 번째 주문 선택
+  useEffect(() => {
+    const orders =
+      activeTab === "processing"
+        ? mockOrders.filter(
+            (order) => order.status === "pending" || order.status === "preparing"
+          )
+        : mockOrders.filter((order) => order.status === "completed");
 
-  const selectedOrder = mockOrders.find(
+    setSelectedOrderId(orders[0]?.id || null);
+  }, [activeTab]);
+
+  // 현재 탭에 맞는 주문 필터링
+  const currentOrders =
+    activeTab === "processing"
+      ? mockOrders.filter(
+          (order) => order.status === "pending" || order.status === "preparing"
+        )
+      : mockOrders.filter((order) => order.status === "completed");
+
+  const selectedOrder = currentOrders.find(
     (order) => order.id === selectedOrderId
   );
 
   return (
     <Container>
-      <TopBar currentTime={currentTime} />
+      <TopBar
+        currentTime={currentTime}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
       <ContentWrapper>
         <OrderListSidebar
-          newOrders={newOrders}
-          inProgressOrders={inProgressOrders}
+          orders={currentOrders}
           selectedOrderId={selectedOrderId}
           onSelectOrder={setSelectedOrderId}
+          showCategories={activeTab === "processing"}
+          categoryTitle="완료"
         />
 
         <MainContent>

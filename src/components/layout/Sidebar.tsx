@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "@emotion/styled";
-import { Store, Truck, Package, Menu } from "lucide-react";
+import { Store, Package } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { theme } from "@/styles/theme";
@@ -70,15 +70,7 @@ export default function Sidebar() {
     <SidebarContainer>
       <NavButton href="/" isActive={pathname === "/"}>
         <Store size={24} strokeWidth={2} />
-        <NavText>
-          처리중
-          <br />
-          3건
-        </NavText>
-      </NavButton>
-      <NavButton href="/delivery" isActive={pathname === "/delivery"}>
-        <Truck size={24} strokeWidth={2} />
-        <NavText>완료</NavText>
+        <NavText>주문 관리</NavText>
       </NavButton>
       <NavButton href="/inventory" isActive={pathname === "/inventory"}>
         <Package size={24} strokeWidth={2} />
