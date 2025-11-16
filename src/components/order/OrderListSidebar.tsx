@@ -43,19 +43,17 @@ const SectionCount = styled.span`
 
 const OrderList = styled.div`
   overflow-y: auto;
-  padding: ${theme.spacing.md};
   flex: 1;
 `;
 
 const OrderListItem = styled.div<{ active: boolean }>`
-  padding: ${theme.spacing.md};
+  padding: ${theme.spacing.xl};
   margin-bottom: ${theme.spacing.sm};
   background: ${({ active }) =>
     active ? theme.colors.brand.blue : theme.colors.background.secondary};
-  border: 2px solid
+  border: 4px solid
     ${({ active }) =>
       active ? theme.colors.brand.blue : theme.colors.border.secondary};
-  border-radius: ${theme.borderRadius.md};
   cursor: pointer;
   transition: ${theme.transition.all};
 
@@ -74,7 +72,7 @@ const OrderItemHeader = styled.div`
 
 const OrderItemId = styled.div<{ active: boolean }>`
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.md};
+  font-size: ${theme.fontSize.xl};
   font-weight: ${theme.fontWeight.bold};
   color: ${({ active }) =>
     active ? theme.colors.text.white : theme.colors.text.primary};
