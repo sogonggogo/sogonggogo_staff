@@ -3,7 +3,7 @@ import { theme } from "@/styles/theme";
 
 const Bar = styled.div`
   background: ${theme.colors.background.darker};
-  padding: ${theme.spacing.md} ${theme.spacing.xxl};
+  padding: ${theme.spacing.xl} ${theme.spacing.xxl};
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -13,7 +13,7 @@ const Bar = styled.div`
 
 const DateTime = styled.div`
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.sm};
+  font-size: ${theme.fontSize.lg};
   font-weight: ${theme.fontWeight.normal};
   color: ${theme.colors.text.light};
 `;

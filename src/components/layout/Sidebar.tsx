@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import styled from '@emotion/styled';
-import { Store, Truck, Package, Menu } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { theme } from '@/styles/theme';
+import styled from "@emotion/styled";
+import { Store, Truck, Package, Menu } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { theme } from "@/styles/theme";
 
 const SidebarContainer = styled.aside`
   width: ${theme.sizes.sidebarWidth};
@@ -44,15 +44,15 @@ const LogoText = styled.h2`
 `;
 
 const NavButton = styled(Link, {
-  shouldForwardProp: (prop) => prop !== 'isActive',
+  shouldForwardProp: (prop) => prop !== "isActive",
 })<{ isActive: boolean }>`
   width: 100%;
   height: ${theme.sizes.navButtonHeight};
   border-radius: ${theme.borderRadius.md};
   background-color: ${({ isActive }) =>
-    isActive ? theme.colors.background.darker : 'transparent'};
+    isActive ? theme.colors.background.darker : "transparent"};
   border-left: 3px solid
-    ${({ isActive }) => (isActive ? theme.colors.brand.success : 'transparent')};
+    ${({ isActive }) => (isActive ? theme.colors.brand.success : "transparent")};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,7 +76,7 @@ const NavButton = styled(Link, {
 
 const NavText = styled.span`
   font-family: ${theme.fontFamily.miwon};
-  font-size: ${theme.fontSize['2xs']};
+  font-size: ${theme.fontSize["2xs"]};
   font-weight: ${theme.fontWeight.medium};
   text-align: center;
 `;
@@ -86,23 +86,21 @@ export default function Sidebar() {
 
   return (
     <SidebarContainer>
-      <MenuIcon>
-        <Menu size={20} />
-      </MenuIcon>
-      <Logo>
-        <LogoText>주방용</LogoText>
-      </Logo>
-      <NavButton href="/" isActive={pathname === '/'}>
+      <NavButton href="/" isActive={pathname === "/"}>
         <Store size={20} />
-        <NavText>재장운<br />1건</NavText>
+        <NavText>
+          처리중
+          <br />
+          3건
+        </NavText>
       </NavButton>
-      <NavButton href="/delivery" isActive={pathname === '/delivery'}>
+      <NavButton href="/delivery" isActive={pathname === "/delivery"}>
         <Truck size={20} />
-        <NavText>주문<br />5건</NavText>
+        <NavText>완료</NavText>
       </NavButton>
-      <NavButton href="/inventory" isActive={pathname === '/inventory'}>
+      <NavButton href="/inventory" isActive={pathname === "/inventory"}>
         <Package size={20} />
-        <NavText>재고</NavText>
+        <NavText>재고 관리</NavText>
       </NavButton>
     </SidebarContainer>
   );
