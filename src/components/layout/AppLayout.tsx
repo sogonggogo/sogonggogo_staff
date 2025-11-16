@@ -14,7 +14,7 @@ const MainContent = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: ${theme.sizes.sidebarWidth};
+  margin-left: 120px;
 `;
 
 const ContentArea = styled.div`
