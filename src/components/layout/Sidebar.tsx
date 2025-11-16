@@ -8,7 +8,7 @@ import { theme } from "@/styles/theme";
 
 const SidebarContainer = styled.aside`
   width: 120px;
-  background: ${theme.colors.background.secondary};
+  background: ${theme.colors.background.darker};
   padding: ${theme.spacing.xl} ${theme.spacing.md};
   display: flex;
   flex-direction: column;
@@ -20,29 +20,6 @@ const SidebarContainer = styled.aside`
   border-right: 1px solid ${theme.colors.border.primary};
 `;
 
-const MenuIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: ${theme.spacing.md};
-  color: ${theme.colors.text.white};
-  margin-bottom: ${theme.spacing.sm};
-`;
-
-const Logo = styled.div`
-  text-align: center;
-  padding: ${theme.spacing.lg} 0;
-  margin-bottom: ${theme.spacing.xxl};
-`;
-
-const LogoText = styled.h2`
-  font-family: ${theme.fontFamily.ttangsbudae};
-  font-size: ${theme.fontSize.md};
-  font-weight: ${theme.fontWeight.bold};
-  color: ${theme.colors.text.primary};
-  line-height: 1.4;
-`;
-
 const NavButton = styled(Link, {
   shouldForwardProp: (prop) => prop !== "isActive",
 })<{ isActive: boolean }>`
@@ -50,9 +27,10 @@ const NavButton = styled(Link, {
   height: 80px;
   border-radius: ${theme.borderRadius.lg};
   background-color: ${({ isActive }) =>
-    isActive ? theme.colors.text.primary : theme.colors.background.secondary};
+    isActive ? theme.colors.text.primary : theme.colors.background.darker};
   border: 2px solid
-    ${({ isActive }) => (isActive ? theme.colors.text.primary : theme.colors.border.secondary)};
+    ${({ isActive }) =>
+      isActive ? theme.colors.text.primary : theme.colors.border.light};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,13 +39,13 @@ const NavButton = styled(Link, {
   cursor: pointer;
   transition: ${theme.transition.all};
   color: ${({ isActive }) =>
-    isActive ? theme.colors.background.secondary : theme.colors.text.primary};
+    isActive ? theme.colors.background.darker : theme.colors.text.primary};
   text-decoration: none;
   padding: ${theme.spacing.md};
 
   &:hover {
     background-color: ${({ isActive }) =>
-      isActive ? theme.colors.text.primary : theme.colors.background.light};
+      isActive ? theme.colors.text.primary : theme.colors.background.darkest};
     border-color: ${theme.colors.text.primary};
     box-shadow: ${theme.shadow.sm};
   }
