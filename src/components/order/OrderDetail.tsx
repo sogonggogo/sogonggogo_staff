@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { Minus, Plus } from "lucide-react";
 import { theme } from "@/styles/theme";
 import { Order } from "@/data/orders";
 import { useState } from "react";
@@ -28,7 +27,7 @@ const DetailHeader = styled.div`
   border-bottom: 1px solid ${theme.colors.border.dark};
 `;
 
-const HeaderLeft = styled.div`
+const HeaderInfo = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.lg};
@@ -51,93 +50,6 @@ const DetailStatus = styled.div`
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.md};
   font-weight: ${theme.fontWeight.medium};
-`;
-
-const HeaderActions = styled.div`
-  display: flex;
-  gap: ${theme.spacing.md};
-  align-items: center;
-`;
-
-const RejectButton = styled.button`
-  background: transparent;
-  color: ${theme.colors.text.light};
-  border: 1px solid ${theme.colors.border.darker};
-  padding: ${theme.spacing.md} ${theme.spacing.xl};
-  border-radius: ${theme.borderRadius.sm};
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  font-weight: ${theme.fontWeight.medium};
-  cursor: pointer;
-  transition: ${theme.transition.all};
-
-  &:hover {
-    background: ${theme.colors.background.darkest};
-    border-color: ${theme.colors.border.dark};
-  }
-`;
-
-const TimeControl = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing.md};
-  background: ${theme.colors.background.darkest};
-  padding: ${theme.spacing.sm} ${theme.spacing.lg};
-  border-radius: ${theme.borderRadius.sm};
-  border: 1px solid ${theme.colors.border.darker};
-`;
-
-const TimeButton = styled.button`
-  background: ${theme.colors.background.darker};
-  border: 1px solid ${theme.colors.border.darker};
-  width: 32px;
-  height: 32px;
-  border-radius: ${theme.borderRadius.xs};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: ${theme.transition.all};
-  color: ${theme.colors.text.light};
-
-  &:hover {
-    background: ${theme.colors.background.darkest};
-    border-color: ${theme.colors.border.dark};
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-`;
-
-const TimeDisplay = styled.span`
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  font-weight: ${theme.fontWeight.medium};
-  color: ${theme.colors.text.light};
-  min-width: 60px;
-  text-align: center;
-`;
-
-const ConfirmButton = styled.button`
-  background: ${theme.colors.brand.blue};
-  color: ${theme.colors.text.white};
-  border: none;
-  padding: ${theme.spacing.md} ${theme.spacing.xxxl};
-  border-radius: ${theme.borderRadius.sm};
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  font-weight: ${theme.fontWeight.bold};
-  cursor: pointer;
-  transition: ${theme.transition.all};
-
-  &:hover {
-    background: ${theme.colors.brand.blueHover};
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
 `;
 
 const OrderSummary = styled.div`
@@ -348,23 +260,10 @@ export default function OrderDetail({ order }: OrderDetailProps) {
     <DetailContent>
       <DetailCard>
         <DetailHeader>
-          <HeaderLeft>
+          <HeaderInfo>
             <DetailTitle>{order.id}</DetailTitle>
             <DetailStatus>{order.statusText}</DetailStatus>
-          </HeaderLeft>
-          <HeaderActions>
-            <RejectButton>거부</RejectButton>
-            <TimeControl>
-              <TimeButton>
-                <Minus size={16} />
-              </TimeButton>
-              <TimeDisplay>5-10분</TimeDisplay>
-              <TimeButton>
-                <Plus size={16} />
-              </TimeButton>
-            </TimeControl>
-            <ConfirmButton>접수</ConfirmButton>
-          </HeaderActions>
+          </HeaderInfo>
         </DetailHeader>
 
         <OrderSummary>
