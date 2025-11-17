@@ -48,6 +48,18 @@ export const theme = {
       danger: '#ef4444',
     },
 
+    // Inventory colors
+    inventory: {
+      cardBg: '#1e2939',
+      headerBg: '#0a0f19',
+      badgeBg: '#364153',
+      labelText: '#99A1AE',
+      valueText: '#D1D5DC',
+      danger: '#DC2626',
+      warning: '#F59E0B',
+      success: '#10B981',
+    },
+
     // Legacy colors for compatibility
     primary: '#d62300',
     secondary: '#ffa500',
@@ -179,7 +191,8 @@ export const theme = {
 
   sizes: {
     // Sidebar
-    sidebarWidth: '64px',
+    sidebarWidth: '120px',
+    orderSidebarWidth: '320px',
 
     // Buttons
     buttonSm: '28px',
@@ -194,6 +207,9 @@ export const theme = {
 
     // Cards
     navButtonHeight: '64px',
+
+    // Layout
+    detailMaxWidth: '1200px',
 
     // Legacy
     maxWidth: '1280px',

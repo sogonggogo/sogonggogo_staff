@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { mockOrders } from "@/data/orders";
 import { theme } from "@/styles/theme";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import OrderListSidebar from "@/components/order/OrderListSidebar";
 import OrderDetail from "@/components/order/OrderDetail";
@@ -29,21 +29,19 @@ export default function OrdersPage() {
 
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
-  // 탭 변경 시 첫 번째 주문 선택
-  useEffect(() => {
-    const orders =
+  // 현재 탭에 맞는 주문 필터링 (메모이제이션)
+  const currentOrders = useMemo(
+    () =>
       activeTab === "processing"
         ? mockOrders.filter((order) => order.status !== "delivered")
-        : mockOrders.filter((order) => order.status === "delivered");
+        : mockOrders.filter((order) => order.status === "delivered"),
+    [activeTab]
+  );
 
-    setSelectedOrderId(orders[0]?.id || null);
-  }, [activeTab]);
-
-  // 현재 탭에 맞는 주문 필터링
-  const currentOrders =
-    activeTab === "processing"
-      ? mockOrders.filter((order) => order.status !== "delivered")
-      : mockOrders.filter((order) => order.status === "delivered");
+  // 탭 변경 시 첫 번째 주문 선택
+  useEffect(() => {
+    setSelectedOrderId(currentOrders[0]?.id || null);
+  }, [currentOrders]);
 
   const selectedOrder = currentOrders.find(
     (order) => order.id === selectedOrderId

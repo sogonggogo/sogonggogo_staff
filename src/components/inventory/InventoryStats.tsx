@@ -11,21 +11,21 @@ const StatsContainer = styled.div`
 `;
 
 const StatCard = styled.div`
-  background-color: #1e2939;
-  border: 1px solid #364153;
+  background-color: ${theme.colors.inventory.cardBg};
+  border: 1px solid ${theme.colors.inventory.badgeBg};
   border-radius: ${theme.borderRadius.lg};
   padding: ${theme.spacing.xl};
 `;
 
 const StatLabel = styled.div`
-  font-family: 'Inter', sans-serif;
+  font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.md};
-  color: #99A1AE;
+  color: ${theme.colors.inventory.labelText};
   margin-bottom: ${theme.spacing.sm};
 `;
 
 const StatValue = styled.div<{ color?: string }>`
-  font-family: 'Inter', sans-serif;
+  font-family: ${theme.fontFamily.nanumGothic};
   font-size: 28px;
   font-weight: ${theme.fontWeight.semibold};
   color: ${({ color }) => color || theme.colors.text.white};
@@ -52,15 +52,15 @@ export default function InventoryStats({
       </StatCard>
       <StatCard>
         <StatLabel>재고 부족</StatLabel>
-        <StatValue color="#DC2626">{lowStockCount}</StatValue>
+        <StatValue color={theme.colors.inventory.danger}>{lowStockCount}</StatValue>
       </StatCard>
       <StatCard>
         <StatLabel>재고 보통</StatLabel>
-        <StatValue color="#F59E0B">{mediumStockCount}</StatValue>
+        <StatValue color={theme.colors.inventory.warning}>{mediumStockCount}</StatValue>
       </StatCard>
       <StatCard>
         <StatLabel>재고 충분</StatLabel>
-        <StatValue color="#10B981">{goodStockCount}</StatValue>
+        <StatValue color={theme.colors.inventory.success}>{goodStockCount}</StatValue>
       </StatCard>
     </StatsContainer>
   );

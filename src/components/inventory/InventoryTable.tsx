@@ -6,8 +6,8 @@ import { InventoryItem } from '@/data/inventory';
 import { theme } from '@/styles/theme';
 
 const InventoryTableWrapper = styled.div`
-  background-color: #1e2939;
-  border: 1px solid #364153;
+  background-color: ${theme.colors.inventory.cardBg};
+  border: 1px solid ${theme.colors.inventory.badgeBg};
   border-radius: ${theme.borderRadius.lg};
   overflow: hidden;
 `;
@@ -18,21 +18,21 @@ const Table = styled.table`
 `;
 
 const TableHeader = styled.thead`
-  background-color: #0a0f19;
-  border-bottom: 1px solid #364153;
+  background-color: ${theme.colors.inventory.headerBg};
+  border-bottom: 1px solid ${theme.colors.inventory.badgeBg};
 `;
 
 const Th = styled.th`
   padding: ${theme.spacing.lg};
   text-align: left;
-  font-family: 'Inter', sans-serif;
+  font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.md};
   font-weight: ${theme.fontWeight.semibold};
-  color: #99A1AE;
+  color: ${theme.colors.inventory.labelText};
 `;
 
 const Tr = styled.tr`
-  border-bottom: 1px solid #364153;
+  border-bottom: 1px solid ${theme.colors.inventory.badgeBg};
   transition: ${theme.transition.fast};
 
   &:hover {
@@ -46,22 +46,22 @@ const Tr = styled.tr`
 
 const Td = styled.td`
   padding: ${theme.spacing.lg};
-  font-family: 'Inter', sans-serif;
+  font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.md};
-  color: #D1D5DC;
+  color: ${theme.colors.inventory.valueText};
 `;
 
 const ItemName = styled(Td)`
   font-weight: ${theme.fontWeight.semibold};
-  color: #FFFFFF;
+  color: ${theme.colors.text.white};
 `;
 
 const CategoryBadge = styled.span`
   padding: ${theme.spacing.xs} 10px;
   border-radius: ${theme.borderRadius.lg};
-  background-color: #364153;
-  color: #D1D5DC;
-  font-family: 'Inter', sans-serif;
+  background-color: ${theme.colors.inventory.badgeBg};
+  color: ${theme.colors.inventory.valueText};
+  font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.xs};
   font-weight: ${theme.fontWeight.medium};
 `;
@@ -94,13 +94,13 @@ const StockBadge = styled.span<{ level: string }>`
   }};
   color: ${({ level }) => {
     const colors = {
-      low: theme.colors.status.danger,
-      medium: theme.colors.status.warning,
-      good: theme.colors.status.completed,
+      low: theme.colors.inventory.danger,
+      medium: theme.colors.inventory.warning,
+      good: theme.colors.inventory.success,
     };
     return colors[level as keyof typeof colors];
   }};
-  font-family: 'Inter', sans-serif;
+  font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.xs};
   font-weight: ${theme.fontWeight.semibold};
 `;
