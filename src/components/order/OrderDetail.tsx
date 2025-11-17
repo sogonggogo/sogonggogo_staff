@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
 import { Order } from "@/data/orders";
-import { useState } from "react";
 
 const DetailContent = styled.div`
   flex: 1;
@@ -59,45 +58,6 @@ const OrderSummary = styled.div`
   margin-bottom: ${theme.spacing.xxxl};
 `;
 
-const TabNavigation = styled.div`
-  display: flex;
-  gap: ${theme.spacing.xl};
-  margin-bottom: ${theme.spacing.xxl};
-  border-bottom: 1px solid ${theme.colors.border.dark};
-`;
-
-const Tab = styled.button<{ active: boolean }>`
-  background: transparent;
-  border: none;
-  padding: ${theme.spacing.lg} 0;
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  font-weight: ${theme.fontWeight.medium};
-  color: ${({ active }) =>
-    active ? theme.colors.text.white : theme.colors.text.tertiary};
-  cursor: pointer;
-  position: relative;
-  transition: ${theme.transition.all};
-
-  &:hover {
-    color: ${theme.colors.text.light};
-  }
-
-  ${({ active }) =>
-    active &&
-    `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: ${theme.colors.text.white};
-    }
-  `}
-`;
-
 const DetailSection = styled.div`
   margin-bottom: ${theme.spacing.xxl};
 `;
@@ -121,36 +81,6 @@ const DetailLabel = styled.span`
 
 const DetailValue = styled.span`
   color: ${theme.colors.text.light};
-  font-weight: ${theme.fontWeight.medium};
-`;
-
-const OptionsSection = styled.div`
-  margin-bottom: ${theme.spacing.xxl};
-`;
-
-const OptionTitle = styled.div`
-  color: ${theme.colors.text.tertiary};
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  font-weight: ${theme.fontWeight.normal};
-  margin-bottom: ${theme.spacing.md};
-`;
-
-const OptionBadges = styled.div`
-  display: flex;
-  gap: ${theme.spacing.md};
-  flex-wrap: wrap;
-  margin-bottom: ${theme.spacing.xl};
-`;
-
-const OptionBadge = styled.div`
-  background: ${theme.colors.background.darkest};
-  color: ${theme.colors.text.light};
-  padding: ${theme.spacing.sm} ${theme.spacing.lg};
-  border-radius: ${theme.borderRadius.xs};
-  border: 1px solid ${theme.colors.border.darker};
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.sm};
   font-weight: ${theme.fontWeight.medium};
 `;
 
@@ -244,10 +174,6 @@ interface OrderDetailProps {
 }
 
 export default function OrderDetail({ order }: OrderDetailProps) {
-  const [activeTab, setActiveTab] = useState<"request" | "order" | "other">(
-    "request"
-  );
-
   if (!order) {
     return (
       <DetailContent>
@@ -271,85 +197,35 @@ export default function OrderDetail({ order }: OrderDetailProps) {
           {order.total.toLocaleString()}원 (결제완료)
         </OrderSummary>
 
-        <TabNavigation>
-          <Tab
-            active={activeTab === "request"}
-            onClick={() => setActiveTab("request")}
-          >
-            요청사항
-          </Tab>
-          <Tab
-            active={activeTab === "order"}
-            onClick={() => setActiveTab("order")}
-          >
-            주문정보
-          </Tab>
-          <Tab
-            active={activeTab === "other"}
-            onClick={() => setActiveTab("other")}
-          >
-            기타정보
-          </Tab>
-        </TabNavigation>
+        <DetailSection>
+          <DetailRow>
+            <DetailLabel>주문 번호</DetailLabel>
+            <DetailValue>{order.id}</DetailValue>
+          </DetailRow>
+          <DetailRow>
+            <DetailLabel>주문 시간</DetailLabel>
+            <DetailValue>{order.time}</DetailValue>
+          </DetailRow>
+          <DetailRow>
+            <DetailLabel>배달 주소</DetailLabel>
+            <DetailValue>{order.address}</DetailValue>
+          </DetailRow>
+          <DetailRow>
+            <DetailLabel>전화번호</DetailLabel>
+            <DetailValue>{order.phone}</DetailValue>
+          </DetailRow>
+        </DetailSection>
 
-        {activeTab === "request" && (
-          <>
-            <OptionsSection>
-              <OptionTitle>가게</OptionTitle>
-              <DetailValue>맵지 않게 해주세요</DetailValue>
-            </OptionsSection>
-
-            <OptionsSection>
-              <OptionTitle>배달</OptionTitle>
-              <DetailValue>조심히 안전히 와주세요</DetailValue>
-            </OptionsSection>
-
-            <OptionsSection>
-              <OptionTitle>친환경</OptionTitle>
-              <OptionBadges>
-                <OptionBadge>수저포크 O</OptionBadge>
-                <OptionBadge>컵지, 단무지 O</OptionBadge>
-                <OptionBadge>다회용기 사용 O</OptionBadge>
-              </OptionBadges>
-            </OptionsSection>
-          </>
-        )}
-
-        {activeTab === "order" && (
-          <>
-            <DetailSection>
-              <DetailRow>
-                <DetailLabel>주문 번호</DetailLabel>
-                <DetailValue>{order.id}</DetailValue>
-              </DetailRow>
-              <DetailRow>
-                <DetailLabel>주문 시간</DetailLabel>
-                <DetailValue>{order.time}</DetailValue>
-              </DetailRow>
-              <DetailRow>
-                <DetailLabel>배달 주소</DetailLabel>
-                <DetailValue>{order.address}</DetailValue>
-              </DetailRow>
-              <DetailRow>
-                <DetailLabel>전화번호</DetailLabel>
-                <DetailValue>{order.phone}</DetailValue>
-              </DetailRow>
-            </DetailSection>
-          </>
-        )}
-
-        {activeTab === "other" && (
-          <DetailSection>
-            <DetailRow>
-              <DetailLabel>결제 방법</DetailLabel>
-              <DetailValue>카드 결제</DetailValue>
-            </DetailRow>
-            <DetailRow>
-              <DetailLabel>할인</DetailLabel>
-              <DetailValue>없음</DetailValue>
-            </DetailRow>
-          </DetailSection>
-        )}
+        <DetailSection>
+          <DetailRow>
+            <DetailLabel>결제 방법</DetailLabel>
+            <DetailValue>카드 결제</DetailValue>
+          </DetailRow>
+          <DetailRow>
+            <DetailLabel>할인</DetailLabel>
+            <DetailValue>없음</DetailValue>
+          </DetailRow>
+        </DetailSection>
 
         <MenuSection>
           <MenuTitle>메뉴</MenuTitle>
