@@ -81,13 +81,15 @@ const OrderItemId = styled.div<{ active: boolean }>`
     active ? theme.colors.background.secondary : theme.colors.text.primary};
 `;
 
-const OrderItemStatus = styled.div<{ active: boolean }>`
+const OrderItemStatus = styled.div`
+  display: inline-block;
+  background: ${theme.colors.status.completed};
+  color: ${theme.colors.text.white};
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  border-radius: ${theme.borderRadius.xs};
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.xs};
-  font-weight: ${theme.fontWeight.bold};
-  color: ${({ active }) =>
-    active ? theme.colors.background.secondary : theme.colors.text.muted};
-  white-space: nowrap;
+  font-weight: ${theme.fontWeight.medium};
 `;
 
 const OrderItemCount = styled.div<{ active: boolean }>`
@@ -173,7 +175,7 @@ export default function OrderListSidebar({
                 <OrderItemId active={selectedOrderId === order.id}>
                   {order.id}
                 </OrderItemId>
-                <OrderItemStatus active={selectedOrderId === order.id}>
+                <OrderItemStatus>
                   {getStatusText(order.status)}
                 </OrderItemStatus>
               </OrderItemHeader>
@@ -202,7 +204,7 @@ export default function OrderListSidebar({
                 <OrderItemId active={selectedOrderId === order.id}>
                   {order.id}
                 </OrderItemId>
-                <OrderItemStatus active={selectedOrderId === order.id}>
+                <OrderItemStatus>
                   {getStatusText(order.status)}
                 </OrderItemStatus>
               </OrderItemHeader>
