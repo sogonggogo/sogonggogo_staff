@@ -31,12 +31,12 @@ const CategorySectionTitle = styled.h3`
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.md};
   font-weight: ${theme.fontWeight.extrabold};
-  color: ${theme.colors.text.primary};
+  color: ${theme.colors.brand.blue};
 `;
 
 const SectionCount = styled.span`
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.sm};
+  font-size: ${theme.fontSize.md};
   font-weight: ${theme.fontWeight.bold};
   color: ${theme.colors.brand.blue};
 `;
@@ -121,7 +121,7 @@ export default function OrderListSidebar({
         <OrderSection>
           <SectionHeader>
             <CategorySectionTitle>{categoryTitle}</CategorySectionTitle>
-            <SectionCount>{orders.length}</SectionCount>
+            <SectionCount>{orders.length}건</SectionCount>
           </SectionHeader>
           <OrderList>
             {orders.map((order) => (
@@ -161,7 +161,7 @@ export default function OrderListSidebar({
       <OrderSection>
         <SectionHeader>
           <CategorySectionTitle>신규</CategorySectionTitle>
-          <SectionCount>{newOrders.length}</SectionCount>
+          <SectionCount>{newOrders.length}건</SectionCount>
         </SectionHeader>
         <OrderList>
           {newOrders.map((order) => (
@@ -188,7 +188,7 @@ export default function OrderListSidebar({
       <OrderSection>
         <SectionHeader>
           <CategorySectionTitle>진행</CategorySectionTitle>
-          <SectionCount>{inProgressOrders.length}</SectionCount>
+          <SectionCount>{inProgressOrders.length}건</SectionCount>
         </SectionHeader>
         <OrderList>
           {inProgressOrders.map((order) => (
