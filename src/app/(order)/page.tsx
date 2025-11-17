@@ -4,21 +4,15 @@ import styled from "@emotion/styled";
 import { mockOrders } from "@/data/orders";
 import { theme } from "@/styles/theme";
 import { useState, useEffect } from "react";
-import TopBar, { OrderTab } from "@/components/order/TopBar";
+import { useSearchParams } from "next/navigation";
 import OrderListSidebar from "@/components/order/OrderListSidebar";
 import OrderDetail from "@/components/order/OrderDetail";
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background: ${theme.colors.background.primary};
-`;
-
-const ContentWrapper = styled.div`
-  display: flex;
   flex: 1;
   overflow: hidden;
+  background: ${theme.colors.background.primary};
 `;
 
 const MainContent = styled.main`
@@ -29,19 +23,11 @@ const MainContent = styled.main`
 `;
 
 export default function OrdersPage() {
-  const [activeTab, setActiveTab] = useState<OrderTab>("processing");
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(
-    mockOrders[0]?.id || null
-  );
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") || "processing";
+  const activeTab = tab === "completed" ? "completed" : "processing";
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 10000);
-
-    return () => clearInterval(timer);
-  }, []);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   // 탭 변경 시 첫 번째 주문 선택
   useEffect(() => {
@@ -65,25 +51,17 @@ export default function OrdersPage() {
 
   return (
     <Container>
-      <TopBar
-        currentTime={currentTime}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
+      <OrderListSidebar
+        orders={currentOrders}
+        selectedOrderId={selectedOrderId}
+        onSelectOrder={setSelectedOrderId}
+        showCategories={activeTab === "processing"}
+        categoryTitle="완료"
       />
 
-      <ContentWrapper>
-        <OrderListSidebar
-          orders={currentOrders}
-          selectedOrderId={selectedOrderId}
-          onSelectOrder={setSelectedOrderId}
-          showCategories={activeTab === "processing"}
-          categoryTitle="완료"
-        />
-
-        <MainContent>
-          <OrderDetail order={selectedOrder} />
-        </MainContent>
-      </ContentWrapper>
+      <MainContent>
+        <OrderDetail order={selectedOrder} />
+      </MainContent>
     </Container>
   );
 }

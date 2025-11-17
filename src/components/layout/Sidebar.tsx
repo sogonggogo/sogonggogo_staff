@@ -1,9 +1,9 @@
 "use client";
 
 import styled from "@emotion/styled";
-import { Store, Package } from "lucide-react";
+import { Package, ClipboardList, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { theme } from "@/styles/theme";
 
 const SidebarContainer = styled.aside`
@@ -65,14 +65,24 @@ const NavText = styled.span`
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+
+  const isProcessing = pathname === "/" && (!tab || tab === "processing");
+  const isCompleted = pathname === "/" && tab === "completed";
+  const isInventory = pathname === "/inventory";
 
   return (
     <SidebarContainer>
-      <NavButton href="/" isActive={pathname === "/"}>
-        <Store size={24} strokeWidth={2} />
-        <NavText>주문 관리</NavText>
+      <NavButton href="/?tab=processing" isActive={isProcessing}>
+        <ClipboardList size={24} strokeWidth={2} />
+        <NavText>처리중</NavText>
       </NavButton>
-      <NavButton href="/inventory" isActive={pathname === "/inventory"}>
+      <NavButton href="/?tab=completed" isActive={isCompleted}>
+        <ClipboardCheck size={24} strokeWidth={2} />
+        <NavText>완료</NavText>
+      </NavButton>
+      <NavButton href="/inventory" isActive={isInventory}>
         <Package size={24} strokeWidth={2} />
         <NavText>재고 관리</NavText>
       </NavButton>
