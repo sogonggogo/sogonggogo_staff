@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
 import { Order, getStatusText } from "@/data/orders";
-import { formatPrice } from "@/data/menus";
+import { formatPrice, dinnerMenus } from "@/data/menus";
 
 const DetailContent = styled.div`
   flex: 1;
@@ -169,10 +169,8 @@ const MenuList = styled.div`
   gap: ${theme.spacing.md};
 `;
 
-const MenuItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+const MenuGroup = styled.div`
+  margin-bottom: ${theme.spacing.lg};
   padding: ${theme.spacing.lg};
   background: ${theme.colors.background.darkest};
   border-radius: ${theme.borderRadius.sm};
@@ -180,22 +178,36 @@ const MenuItem = styled.div`
   font-family: ${theme.fontFamily.nanumGothic};
 `;
 
-const MenuInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing.xs};
-`;
-
-const MenuName = styled.div`
-  font-size: ${theme.fontSize.base};
+const MainMenuName = styled.div`
+  font-size: ${theme.fontSize.lg};
   font-weight: ${theme.fontWeight.bold};
   color: ${theme.colors.text.white};
+  margin-bottom: ${theme.spacing.md};
 `;
 
-const MenuDetails = styled.div`
-  font-size: ${theme.fontSize.sm};
+const SubMenuList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.sm};
+  padding-left: ${theme.spacing.lg};
+`;
+
+const SubMenuItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.light};
+`;
+
+const SubMenuName = styled.span`
   font-weight: ${theme.fontWeight.normal};
   color: ${theme.colors.text.tertiary};
+`;
+
+const SubMenuDetails = styled.span`
+  font-weight: ${theme.fontWeight.medium};
+  color: ${theme.colors.text.light};
 `;
 
 const TotalSection = styled.div`
@@ -281,16 +293,41 @@ export default function OrderDetail({ order }: OrderDetailProps) {
           <MenuSection>
             <MenuTitle>메뉴</MenuTitle>
             <MenuList>
-              {order.items.map((item, index) => (
-                <MenuItem key={index}>
-                  <MenuInfo>
-                    <MenuName>{item.name}</MenuName>
-                    <MenuDetails>
-                      {item.quantity}개 · {formatPrice(item.price)} (결제완료)
-                    </MenuDetails>
-                  </MenuInfo>
-                </MenuItem>
-              ))}
+              {order.menuId ? (
+                <MenuGroup>
+                  <MainMenuName>
+                    {dinnerMenus.find((m) => m.id === order.menuId)?.name ||
+                      "메뉴"}
+                  </MainMenuName>
+                  <SubMenuList>
+                    {order.items.map((item, index) => (
+                      <SubMenuItem key={index}>
+                        <SubMenuName>
+                          {item.name} {item.quantity}개
+                        </SubMenuName>
+                        <SubMenuDetails>
+                          {formatPrice(item.price)}
+                        </SubMenuDetails>
+                      </SubMenuItem>
+                    ))}
+                  </SubMenuList>
+                </MenuGroup>
+              ) : (
+                <MenuGroup>
+                  <SubMenuList>
+                    {order.items.map((item, index) => (
+                      <SubMenuItem key={index}>
+                        <SubMenuName>
+                          {item.name} {item.quantity}개
+                        </SubMenuName>
+                        <SubMenuDetails>
+                          {formatPrice(item.price)}
+                        </SubMenuDetails>
+                      </SubMenuItem>
+                    ))}
+                  </SubMenuList>
+                </MenuGroup>
+              )}
             </MenuList>
             <TotalSection>
               <TotalLabel>총 주문 금액</TotalLabel>
