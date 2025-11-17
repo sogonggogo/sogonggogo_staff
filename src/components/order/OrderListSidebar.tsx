@@ -19,7 +19,7 @@ const OrderSection = styled.div`
 
 const SectionHeader = styled.div`
   padding: ${theme.spacing.md} ${theme.spacing.lg};
-  background: ${theme.colors.background.light};
+  background: ${theme.colors.background.secondary};
   border-bottom: 1px solid ${theme.colors.border.secondary};
   display: flex;
   justify-content: flex-start;
@@ -48,12 +48,14 @@ const OrderList = styled.div`
 
 const OrderListItem = styled.div<{ active: boolean }>`
   padding: ${theme.spacing.xl};
-  margin-bottom: ${theme.spacing.sm};
   background: ${({ active }) =>
-    active ? theme.colors.text.primary : theme.colors.background.secondary};
-  border: 4px solid
+    active ? theme.colors.text.primary : theme.colors.border.secondary};
+  border-top: 4px solid
     ${({ active }) =>
-      active ? theme.colors.text.primary : theme.colors.border.secondary};
+      active ? theme.colors.text.primary : theme.colors.background.secondary};
+  border-bottom: 4px solid
+    ${({ active }) =>
+      active ? theme.colors.text.primary : theme.colors.background.secondary};
   cursor: pointer;
   transition: ${theme.transition.all};
   display: flex;
@@ -61,7 +63,8 @@ const OrderListItem = styled.div<{ active: boolean }>`
   gap: ${theme.spacing.sm};
 
   &:hover {
-    border-color: ${theme.colors.text.primary};
+    border-top-color: ${theme.colors.text.primary};
+    border-bottom-color: ${theme.colors.text.primary};
     box-shadow: ${theme.shadow.sm};
   }
 `;
@@ -135,7 +138,7 @@ export default function OrderListSidebar({
                   <OrderItemId active={selectedOrderId === order.id}>
                     {order.id}
                   </OrderItemId>
-                  <OrderItemStatus active={selectedOrderId === order.id}>
+                  <OrderItemStatus>
                     {getStatusText(order.status)}
                   </OrderItemStatus>
                 </OrderItemHeader>
@@ -175,9 +178,7 @@ export default function OrderListSidebar({
                 <OrderItemId active={selectedOrderId === order.id}>
                   {order.id}
                 </OrderItemId>
-                <OrderItemStatus>
-                  {getStatusText(order.status)}
-                </OrderItemStatus>
+                <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
               </OrderItemHeader>
               <OrderItemCount active={selectedOrderId === order.id}>
                 {order.items.length}개 메뉴
@@ -204,9 +205,7 @@ export default function OrderListSidebar({
                 <OrderItemId active={selectedOrderId === order.id}>
                   {order.id}
                 </OrderItemId>
-                <OrderItemStatus>
-                  {getStatusText(order.status)}
-                </OrderItemStatus>
+                <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
               </OrderItemHeader>
               <OrderItemCount active={selectedOrderId === order.id}>
                 {order.items.length}개 메뉴
