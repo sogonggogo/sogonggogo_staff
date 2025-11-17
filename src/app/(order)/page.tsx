@@ -10,7 +10,7 @@ import OrderDetail from "@/components/order/OrderDetail";
 
 const Container = styled.div`
   display: flex;
-  flex: 1;
+  height: 100vh;
   overflow: hidden;
   background: ${theme.colors.background.primary};
 `;
@@ -19,7 +19,9 @@ const MainContent = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100vh;
 `;
 
 export default function OrdersPage() {
