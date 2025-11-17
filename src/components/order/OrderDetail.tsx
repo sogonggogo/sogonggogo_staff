@@ -64,12 +64,13 @@ const DetailSection = styled.div`
 
 const DetailRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: ${theme.spacing.lg} 0;
+  justify-content: flex-start;
+  gap: ${theme.spacing.lg};
+  padding: ${theme.spacing.sm} 0;
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.base};
 
-  &:not(:last-child) {
+  &: last-child {
     border-bottom: 1px solid ${theme.colors.border.darker};
   }
 `;
@@ -133,30 +134,6 @@ const MenuDetails = styled.div`
   color: ${theme.colors.text.tertiary};
 `;
 
-const ActionButtons = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: ${theme.spacing.md};
-`;
-
-const ActionButton = styled.button`
-  background: transparent;
-  color: ${theme.colors.text.light};
-  border: 1px solid ${theme.colors.border.darker};
-  padding: ${theme.spacing.md} ${theme.spacing.xl};
-  border-radius: ${theme.borderRadius.sm};
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  font-weight: ${theme.fontWeight.medium};
-  cursor: pointer;
-  transition: ${theme.transition.all};
-
-  &:hover {
-    background: ${theme.colors.background.darkest};
-    border-color: ${theme.colors.border.dark};
-  }
-`;
-
 const EmptyState = styled.div`
   display: flex;
   flex-direction: column;
@@ -193,8 +170,8 @@ export default function OrderDetail({ order }: OrderDetailProps) {
         </DetailHeader>
 
         <OrderSummary>
-          메뉴 {order.items.length}개 · 총{" "}
-          {order.total.toLocaleString()}원 (결제완료)
+          메뉴 {order.items.length}개 · 총 {order.total.toLocaleString()}원
+          (결제완료)
         </OrderSummary>
 
         <DetailSection>
@@ -211,18 +188,14 @@ export default function OrderDetail({ order }: OrderDetailProps) {
             <DetailValue>{order.address}</DetailValue>
           </DetailRow>
           <DetailRow>
-            <DetailLabel>전화번호</DetailLabel>
+            <DetailLabel>전화 번호</DetailLabel>
             <DetailValue>{order.phone}</DetailValue>
           </DetailRow>
         </DetailSection>
 
         <DetailSection>
           <DetailRow>
-            <DetailLabel>결제 방법</DetailLabel>
-            <DetailValue>카드 결제</DetailValue>
-          </DetailRow>
-          <DetailRow>
-            <DetailLabel>할인</DetailLabel>
+            <DetailLabel>단골 할인</DetailLabel>
             <DetailValue>없음</DetailValue>
           </DetailRow>
         </DetailSection>
@@ -243,11 +216,6 @@ export default function OrderDetail({ order }: OrderDetailProps) {
             ))}
           </MenuList>
         </MenuSection>
-
-        <ActionButtons>
-          <ActionButton>주문전표 재출력</ActionButton>
-          <ActionButton>배달 안내 출력</ActionButton>
-        </ActionButtons>
       </DetailCard>
     </DetailContent>
   );
