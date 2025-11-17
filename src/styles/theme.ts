@@ -138,6 +138,7 @@ export const theme = {
     ttangsbudae: 'var(--font-ttangsbudae)',
     miwon: 'var(--font-miwon)',
     bagelFat: '"BagelFat", sans-serif',
+    piglet: '"Piglet", sans-serif',
     primary: 'var(--font-nanum-gothic)',
     secondary: 'var(--font-nanum-gothic)',
   },

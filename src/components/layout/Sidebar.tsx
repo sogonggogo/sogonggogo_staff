@@ -9,7 +9,7 @@ import { theme } from "@/styles/theme";
 const SidebarContainer = styled.aside`
   width: 120px;
   background: ${theme.colors.background.darker};
-  padding: ${theme.spacing.xl} ${theme.spacing.md};
+  padding: 0 ${theme.spacing.md};
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing.lg};
@@ -18,6 +18,17 @@ const SidebarContainer = styled.aside`
   left: 0;
   top: 0;
   border-right: 1px solid ${theme.colors.border.primary};
+`;
+
+const Logo = styled.div`
+  font-family: ${theme.fontFamily.bagelFat};
+  font-size: ${theme.fontSize.lg};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.text.white};
+  text-align: center;
+  padding: ${theme.spacing.md} 0;
+  border-bottom: 2px solid ${theme.colors.border.light};
+  line-height: 1.2;
 `;
 
 const NavButton = styled(Link, {
@@ -74,6 +85,7 @@ export default function Sidebar() {
 
   return (
     <SidebarContainer>
+      <Logo>MR.DAEBAK</Logo>
       <NavButton href="/?tab=processing" isActive={isProcessing}>
         <ClipboardList size={24} strokeWidth={2} />
         <NavText>처리중</NavText>
