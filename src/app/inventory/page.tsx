@@ -43,7 +43,10 @@ const FilterRow = styled.div`
   align-items: center;
   gap: ${theme.spacing.lg};
   margin-bottom: ${theme.spacing.lg};
-  width: 50%;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const FilterLabel = styled.label`

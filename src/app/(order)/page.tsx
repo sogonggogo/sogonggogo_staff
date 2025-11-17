@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { mockOrders } from "@/data/orders";
 import { theme } from "@/styles/theme";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import OrderListSidebar from "@/components/order/OrderListSidebar";
 import OrderDetail from "@/components/order/OrderDetail";
@@ -24,7 +24,7 @@ const MainContent = styled.main`
   height: 100vh;
 `;
 
-export default function OrdersPage() {
+function OrdersPageContent() {
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") || "processing";
   const activeTab = tab === "completed" ? "completed" : "processing";
@@ -63,5 +63,21 @@ export default function OrdersPage() {
         <OrderDetail order={selectedOrder} />
       </MainContent>
     </Container>
+  );
+}
+
+const LoadingFallback = styled(Container)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${theme.colors.text.white};
+  font-family: ${theme.fontFamily.nanumGothic};
+`;
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={<LoadingFallback>Loading...</LoadingFallback>}>
+      <OrdersPageContent />
+    </Suspense>
   );
 }
