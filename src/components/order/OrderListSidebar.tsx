@@ -50,9 +50,6 @@ const OrderListItem = styled.div<{ active: boolean }>`
   padding: ${theme.spacing.xl};
   background: ${({ active }) =>
     active ? theme.colors.text.primary : theme.colors.border.secondary};
-  border-top: 4px solid
-    ${({ active }) =>
-      active ? theme.colors.text.primary : theme.colors.background.secondary};
   border-bottom: 4px solid
     ${({ active }) =>
       active ? theme.colors.text.primary : theme.colors.background.secondary};
@@ -63,8 +60,7 @@ const OrderListItem = styled.div<{ active: boolean }>`
   gap: ${theme.spacing.sm};
 
   &:hover {
-    border-top-color: ${theme.colors.text.primary};
-    border-bottom-color: ${theme.colors.text.primary};
+    border-color: ${theme.colors.text.primary};
     box-shadow: ${theme.shadow.sm};
   }
 `;
