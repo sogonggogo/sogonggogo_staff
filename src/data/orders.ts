@@ -4,10 +4,11 @@ export interface OrderItem {
   price: number;
 }
 
+export type OrderStatus = 'pending' | 'preparing' | 'delivering' | 'delivered';
+
 export interface Order {
   id: string;
-  status: 'pending' | 'preparing' | 'completed';
-  statusText: string;
+  status: OrderStatus;
   customer: string;
   phone: string;
   address: string;
@@ -16,11 +17,23 @@ export interface Order {
   total: number;
 }
 
+export const getStatusText = (status: OrderStatus): string => {
+  switch (status) {
+    case 'pending':
+      return '승인 대기중';
+    case 'preparing':
+      return '조리중';
+    case 'delivering':
+      return '배달중';
+    case 'delivered':
+      return '배달완료';
+  }
+};
+
 export const mockOrders: Order[] = [
   {
     id: 'ORD-001',
     status: 'pending',
-    statusText: '대기중',
     customer: '김철수',
     phone: '010-1234-5678',
     address: '서울시 강남구 역삼동 123-45',
@@ -34,7 +47,6 @@ export const mockOrders: Order[] = [
   {
     id: 'ORD-002',
     status: 'preparing',
-    statusText: '조리중',
     customer: '이영희',
     phone: '010-2345-6789',
     address: '서울시 서초구 서초동 456-78',
@@ -46,8 +58,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: 'ORD-003',
-    status: 'completed',
-    statusText: '완료',
+    status: 'delivering',
     customer: '박민수',
     phone: '010-3456-7890',
     address: '서울시 송파구 잠실동 789-12',
@@ -57,5 +68,17 @@ export const mockOrders: Order[] = [
       { name: '된장찌개', quantity: 1, price: 11000 },
     ],
     total: 33500,
+  },
+  {
+    id: 'ORD-004',
+    status: 'delivered',
+    customer: '최수진',
+    phone: '010-4567-8901',
+    address: '서울시 강동구 천호동 234-56',
+    time: '17:50',
+    items: [
+      { name: '부대찌개', quantity: 2, price: 24000 },
+    ],
+    total: 24000,
   },
 ];

@@ -47,10 +47,8 @@ export default function OrdersPage() {
   useEffect(() => {
     const orders =
       activeTab === "processing"
-        ? mockOrders.filter(
-            (order) => order.status === "pending" || order.status === "preparing"
-          )
-        : mockOrders.filter((order) => order.status === "completed");
+        ? mockOrders.filter((order) => order.status !== "delivered")
+        : mockOrders.filter((order) => order.status === "delivered");
 
     setSelectedOrderId(orders[0]?.id || null);
   }, [activeTab]);
@@ -58,10 +56,8 @@ export default function OrdersPage() {
   // 현재 탭에 맞는 주문 필터링
   const currentOrders =
     activeTab === "processing"
-      ? mockOrders.filter(
-          (order) => order.status === "pending" || order.status === "preparing"
-        )
-      : mockOrders.filter((order) => order.status === "completed");
+      ? mockOrders.filter((order) => order.status !== "delivered")
+      : mockOrders.filter((order) => order.status === "delivered");
 
   const selectedOrder = currentOrders.find(
     (order) => order.id === selectedOrderId

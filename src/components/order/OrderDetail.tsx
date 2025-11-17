@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { Order } from "@/data/orders";
+import { Order, getStatusText } from "@/data/orders";
 
 const DetailContent = styled.div`
   flex: 1;
@@ -188,7 +188,7 @@ export default function OrderDetail({ order }: OrderDetailProps) {
         <DetailHeader>
           <HeaderInfo>
             <DetailTitle>{order.id}</DetailTitle>
-            <DetailStatus>{order.statusText}</DetailStatus>
+            <DetailStatus>{getStatusText(order.status)}</DetailStatus>
           </HeaderInfo>
         </DetailHeader>
 

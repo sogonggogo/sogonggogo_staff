@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { Order } from "@/data/orders";
+import { Order, getStatusText } from "@/data/orders";
 
 const Sidebar = styled.aside`
   width: 320px;
@@ -50,15 +50,18 @@ const OrderListItem = styled.div<{ active: boolean }>`
   padding: ${theme.spacing.xl};
   margin-bottom: ${theme.spacing.sm};
   background: ${({ active }) =>
-    active ? theme.colors.brand.blue : theme.colors.background.secondary};
+    active ? theme.colors.text.primary : theme.colors.background.secondary};
   border: 4px solid
     ${({ active }) =>
-      active ? theme.colors.brand.blue : theme.colors.border.secondary};
+      active ? theme.colors.text.primary : theme.colors.border.secondary};
   cursor: pointer;
   transition: ${theme.transition.all};
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.sm};
 
   &:hover {
-    border-color: ${theme.colors.brand.blue};
+    border-color: ${theme.colors.text.primary};
     box-shadow: ${theme.shadow.sm};
   }
 `;
@@ -67,7 +70,7 @@ const OrderItemHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${theme.spacing.xs};
+  gap: ${theme.spacing.sm};
 `;
 
 const OrderItemId = styled.div<{ active: boolean }>`
@@ -75,24 +78,24 @@ const OrderItemId = styled.div<{ active: boolean }>`
   font-size: ${theme.fontSize.xl};
   font-weight: ${theme.fontWeight.bold};
   color: ${({ active }) =>
-    active ? theme.colors.text.white : theme.colors.text.primary};
+    active ? theme.colors.background.secondary : theme.colors.text.primary};
+`;
+
+const OrderItemStatus = styled.div<{ active: boolean }>`
+  font-family: ${theme.fontFamily.nanumGothic};
+  font-size: ${theme.fontSize.xs};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${({ active }) =>
+    active ? theme.colors.background.secondary : theme.colors.text.muted};
+  white-space: nowrap;
 `;
 
 const OrderItemCount = styled.div<{ active: boolean }>`
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.xs};
-  font-weight: ${theme.fontWeight.normal};
-  color: ${({ active }) =>
-    active ? theme.colors.text.white : theme.colors.text.muted};
-`;
-
-const OrderItemPrice = styled.div<{ active: boolean }>`
-  font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.sm};
-  font-weight: ${theme.fontWeight.bold};
+  font-weight: ${theme.fontWeight.medium};
   color: ${({ active }) =>
-    active ? theme.colors.text.white : theme.colors.text.secondary};
-  margin-top: ${theme.spacing.xs};
+    active ? theme.colors.background.secondary : theme.colors.text.muted};
 `;
 
 interface OrderListSidebarProps {
@@ -130,13 +133,13 @@ export default function OrderListSidebar({
                   <OrderItemId active={selectedOrderId === order.id}>
                     {order.id}
                   </OrderItemId>
-                  <OrderItemCount active={selectedOrderId === order.id}>
-                    {order.items.length}개 메뉴
-                  </OrderItemCount>
+                  <OrderItemStatus active={selectedOrderId === order.id}>
+                    {getStatusText(order.status)}
+                  </OrderItemStatus>
                 </OrderItemHeader>
-                <OrderItemPrice active={selectedOrderId === order.id}>
-                  {order.total.toLocaleString()}원
-                </OrderItemPrice>
+                <OrderItemCount active={selectedOrderId === order.id}>
+                  {order.items.length}개 메뉴
+                </OrderItemCount>
               </OrderListItem>
             ))}
           </OrderList>
@@ -147,7 +150,9 @@ export default function OrderListSidebar({
 
   // 처리중 페이지: 신규/진행 카테고리 표시
   const newOrders = orders.filter((order) => order.status === "pending");
-  const inProgressOrders = orders.filter((order) => order.status === "preparing");
+  const inProgressOrders = orders.filter(
+    (order) => order.status === "preparing" || order.status === "delivering"
+  );
 
   return (
     <Sidebar>
@@ -168,13 +173,13 @@ export default function OrderListSidebar({
                 <OrderItemId active={selectedOrderId === order.id}>
                   {order.id}
                 </OrderItemId>
-                <OrderItemCount active={selectedOrderId === order.id}>
-                  {order.items.length}개 메뉴
-                </OrderItemCount>
+                <OrderItemStatus active={selectedOrderId === order.id}>
+                  {getStatusText(order.status)}
+                </OrderItemStatus>
               </OrderItemHeader>
-              <OrderItemPrice active={selectedOrderId === order.id}>
-                {order.total.toLocaleString()}원
-              </OrderItemPrice>
+              <OrderItemCount active={selectedOrderId === order.id}>
+                {order.items.length}개 메뉴
+              </OrderItemCount>
             </OrderListItem>
           ))}
         </OrderList>
@@ -197,13 +202,13 @@ export default function OrderListSidebar({
                 <OrderItemId active={selectedOrderId === order.id}>
                   {order.id}
                 </OrderItemId>
-                <OrderItemCount active={selectedOrderId === order.id}>
-                  {order.items.length}개 메뉴
-                </OrderItemCount>
+                <OrderItemStatus active={selectedOrderId === order.id}>
+                  {getStatusText(order.status)}
+                </OrderItemStatus>
               </OrderItemHeader>
-              <OrderItemPrice active={selectedOrderId === order.id}>
-                {order.total.toLocaleString()}원
-              </OrderItemPrice>
+              <OrderItemCount active={selectedOrderId === order.id}>
+                {order.items.length}개 메뉴
+              </OrderItemCount>
             </OrderListItem>
           ))}
         </OrderList>
