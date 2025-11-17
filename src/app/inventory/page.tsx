@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
 import { mockInventory, InventoryItem } from "@/data/inventory";
@@ -56,18 +56,75 @@ const FilterLabel = styled.label`
   min-width: 120px;
 `;
 
-const SearchInput = styled.input`
-  flex: 1;
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
+const SearchInputWrapper = styled.div`
+  display: flex;
   background: ${theme.colors.background.darkest};
   border: 1px solid ${theme.colors.border.darker};
   border-radius: ${theme.borderRadius.sm};
+  overflow: hidden;
+  width: 50%;
+`;
+
+const SearchCategorySelect = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  background: ${theme.colors.background.darkest};
+  border-right: 1px solid ${theme.colors.border.dark};
+  cursor: pointer;
+  min-width: 100px;
+`;
+
+const SearchCategoryText = styled.span`
+  font-family: ${theme.fontFamily.nanumGothic};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.white};
+  margin-right: ${theme.spacing.xs};
+`;
+
+const SearchCategoryDropdown = styled.div<{ isOpen: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: ${theme.colors.background.darker};
+  border: 1px solid ${theme.colors.border.dark};
+  border-radius: ${theme.borderRadius.sm};
+  margin-top: ${theme.spacing.xs};
+  z-index: 10;
+  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  box-shadow: ${theme.shadow.lg};
+`;
+
+const SearchCategoryOption = styled.div`
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  font-family: ${theme.fontFamily.nanumGothic};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.white};
+  cursor: pointer;
+  transition: ${theme.transition.all};
+
+  &:hover {
+    background: ${theme.colors.background.darkest};
+  }
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  background: transparent;
+  border: none;
   color: ${theme.colors.text.white};
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.base};
 
   &::placeholder {
     color: ${theme.colors.text.tertiary};
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -276,15 +333,20 @@ const PriceText = styled.span`
 
 export default function InventoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState<"상품명" | "상품ID">(
+    "상품명"
+  );
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [saleStatus, setSaleStatus] = useState<
     "전체" | "판매대기" | "판매승인" | "판매중지"
   >("전체");
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   const filteredItems = mockInventory.filter((item) => {
-    const matchesSearch = item.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      searchCategory === "상품명"
+        ? item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        : item.productId.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       saleStatus === "전체" || item.saleStatus === saleStatus;
     return matchesSearch && matchesStatus;
@@ -304,6 +366,27 @@ export default function InventoryPage() {
     );
   };
 
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        categoryDropdownRef.current &&
+        !categoryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCategoryDropdownOpen(false);
+      }
+    };
+
+    if (isCategoryDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCategoryDropdownOpen]);
+
   return (
     <Container>
       <HeaderSection>
@@ -314,12 +397,39 @@ export default function InventoryPage() {
       <FilterSection>
         <FilterRow>
           <FilterLabel>검색어</FilterLabel>
-          <SearchInput
-            type="text"
-            placeholder="상품명을 입력해주세요"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <SearchInputWrapper>
+            <SearchCategorySelect
+              ref={categoryDropdownRef}
+              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+            >
+              <SearchCategoryText>{searchCategory}</SearchCategoryText>
+              <ChevronDown size={16} />
+              <SearchCategoryDropdown isOpen={isCategoryDropdownOpen}>
+                <SearchCategoryOption
+                  onClick={() => {
+                    setSearchCategory("상품명");
+                    setIsCategoryDropdownOpen(false);
+                  }}
+                >
+                  상품명
+                </SearchCategoryOption>
+                <SearchCategoryOption
+                  onClick={() => {
+                    setSearchCategory("상품ID");
+                    setIsCategoryDropdownOpen(false);
+                  }}
+                >
+                  상품ID
+                </SearchCategoryOption>
+              </SearchCategoryDropdown>
+            </SearchCategorySelect>
+            <SearchInput
+              type="text"
+              placeholder={`${searchCategory}을 입력해주세요`}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </SearchInputWrapper>
         </FilterRow>
         <FilterRow>
           <FilterLabel>판매상태</FilterLabel>
@@ -354,13 +464,6 @@ export default function InventoryPage() {
           <FilterLabel>상품 카테고리</FilterLabel>
           <CategoryButton>
             상품 카테고리 찾기
-            <ChevronDown size={16} />
-          </CategoryButton>
-        </FilterRow>
-        <FilterRow>
-          <FilterLabel>기계출 카테고리</FilterLabel>
-          <CategoryButton>
-            기계출 카테고리 찾기
             <ChevronDown size={16} />
           </CategoryButton>
         </FilterRow>

@@ -22,52 +22,31 @@ export interface Order {
 const getItemPrice = (menuId: number | undefined, itemName: string): number => {
   if (!menuId) return 10000; // 기본 가격
 
-  const getItemPriceKey = (menuId: number, itemName: string): string => {
-    switch (menuId) {
-      case 1: // 발렌타인
-        if (itemName === "와인") return "발렌타인-와인";
-        if (itemName === "스테이크") return "발렌타인-스테이크";
-        return itemName;
-      case 2: // 프렌치
-        if (itemName === "커피") return "프렌치-커피";
-        if (itemName === "와인") return "프렌치-와인";
-        if (itemName === "스테이크") return "프렌치-스테이크";
-        return itemName;
-      case 3: // 잉글리시
-        if (itemName === "스테이크") return "잉글리시-스테이크";
-        return itemName;
-      case 4: // 샴페인
-        if (itemName === "커피") return "샴페인-커피";
-        if (itemName === "와인") return "샴페인-와인";
-        if (itemName === "스테이크") return "샴페인-스테이크";
-        return itemName;
-      default:
-        return itemName;
-    }
-  };
-
+  // 통일된 메뉴명 사용
   const itemPrices: Record<string, number> = {
-    "발렌타인-와인": 25000,
-    "발렌타인-스테이크": 35000,
+    // 통일된 메뉴
+    와인: 23333, // 평균 가격
+    스테이크: 31250, // 평균 가격
+    커피: 15000, // 평균 가격
+    
+    // 발렌타인 디너
     "하트 장식": 14500,
     "큐피드 장식": 14500,
-    "프렌치-커피": 10000,
-    "프렌치-와인": 20000,
+    
+    // 프렌치 디너
     샐러드: 15000,
-    "프렌치-스테이크": 20000,
+    
+    // 잉글리시 디너
     "에그 스크램블": 7000,
     베이컨: 8000,
     빵: 5000,
-    "잉글리시-스테이크": 35000,
+    
+    // 샴페인 축제 디너
     샴페인: 25000,
     "바게트 빵": 3750,
-    "샴페인-커피": 20000,
-    "샴페인-와인": 25000,
-    "샴페인-스테이크": 35000,
   };
 
-  const priceKey = getItemPriceKey(menuId, itemName);
-  return itemPrices[priceKey] || itemPrices[itemName] || 10000;
+  return itemPrices[itemName] || 10000;
 };
 
 export const getStatusText = (status: OrderStatus): string => {
