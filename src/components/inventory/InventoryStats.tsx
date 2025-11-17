@@ -11,24 +11,31 @@ const StatsContainer = styled.div`
 `;
 
 const StatCard = styled.div`
-  background-color: ${theme.colors.inventory.cardBg};
-  border: 1px solid ${theme.colors.inventory.badgeBg};
+  background: ${theme.colors.background.darker};
+  border: 1px solid ${theme.colors.border.dark};
   border-radius: ${theme.borderRadius.lg};
   padding: ${theme.spacing.xl};
+  transition: ${theme.transition.all};
+
+  &:hover {
+    border-color: ${theme.colors.border.light};
+    box-shadow: ${theme.shadow.sm};
+  }
 `;
 
 const StatLabel = styled.div`
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.md};
-  color: ${theme.colors.inventory.labelText};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.tertiary};
   margin-bottom: ${theme.spacing.sm};
+  font-weight: ${theme.fontWeight.normal};
 `;
 
 const StatValue = styled.div<{ color?: string }>`
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: 28px;
-  font-weight: ${theme.fontWeight.semibold};
-  color: ${({ color }) => color || theme.colors.text.white};
+  font-size: ${theme.fontSize['3xl']};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${({ color }) => color || theme.colors.brand.blue};
 `;
 
 interface InventoryStatsProps {
@@ -52,15 +59,15 @@ export default function InventoryStats({
       </StatCard>
       <StatCard>
         <StatLabel>재고 부족</StatLabel>
-        <StatValue color={theme.colors.inventory.danger}>{lowStockCount}</StatValue>
+        <StatValue color={theme.colors.status.danger}>{lowStockCount}</StatValue>
       </StatCard>
       <StatCard>
         <StatLabel>재고 보통</StatLabel>
-        <StatValue color={theme.colors.inventory.warning}>{mediumStockCount}</StatValue>
+        <StatValue color={theme.colors.status.warning}>{mediumStockCount}</StatValue>
       </StatCard>
       <StatCard>
         <StatLabel>재고 충분</StatLabel>
-        <StatValue color={theme.colors.inventory.success}>{goodStockCount}</StatValue>
+        <StatValue color={theme.colors.status.completed}>{goodStockCount}</StatValue>
       </StatCard>
     </StatsContainer>
   );

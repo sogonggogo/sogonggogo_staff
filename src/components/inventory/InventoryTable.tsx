@@ -6,8 +6,8 @@ import { InventoryItem } from '@/data/inventory';
 import { theme } from '@/styles/theme';
 
 const InventoryTableWrapper = styled.div`
-  background-color: ${theme.colors.inventory.cardBg};
-  border: 1px solid ${theme.colors.inventory.badgeBg};
+  background: ${theme.colors.background.darker};
+  border: 1px solid ${theme.colors.border.dark};
   border-radius: ${theme.borderRadius.lg};
   overflow: hidden;
 `;
@@ -18,25 +18,25 @@ const Table = styled.table`
 `;
 
 const TableHeader = styled.thead`
-  background-color: ${theme.colors.inventory.headerBg};
-  border-bottom: 1px solid ${theme.colors.inventory.badgeBg};
+  background: ${theme.colors.background.darkest};
+  border-bottom: 1px solid ${theme.colors.border.dark};
 `;
 
 const Th = styled.th`
-  padding: ${theme.spacing.lg};
+  padding: ${theme.spacing.lg} ${theme.spacing.xl};
   text-align: left;
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.md};
-  font-weight: ${theme.fontWeight.semibold};
-  color: ${theme.colors.inventory.labelText};
+  font-size: ${theme.fontSize.base};
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.text.tertiary};
 `;
 
 const Tr = styled.tr`
-  border-bottom: 1px solid ${theme.colors.inventory.badgeBg};
-  transition: ${theme.transition.fast};
+  border-bottom: 1px solid ${theme.colors.border.dark};
+  transition: ${theme.transition.all};
 
   &:hover {
-    background-color: rgba(21, 101, 252, 0.05);
+    background: ${theme.colors.background.darkest};
   }
 
   &:last-child {
@@ -45,29 +45,30 @@ const Tr = styled.tr`
 `;
 
 const Td = styled.td`
-  padding: ${theme.spacing.lg};
+  padding: ${theme.spacing.lg} ${theme.spacing.xl};
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.md};
-  color: ${theme.colors.inventory.valueText};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.light};
 `;
 
 const ItemName = styled(Td)`
-  font-weight: ${theme.fontWeight.semibold};
+  font-weight: ${theme.fontWeight.bold};
   color: ${theme.colors.text.white};
 `;
 
 const CategoryBadge = styled.span`
-  padding: ${theme.spacing.xs} 10px;
-  border-radius: ${theme.borderRadius.lg};
-  background-color: ${theme.colors.inventory.badgeBg};
-  color: ${theme.colors.inventory.valueText};
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  border-radius: ${theme.borderRadius.xs};
+  background: ${theme.colors.background.darkest};
+  color: ${theme.colors.text.tertiary};
   font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.xs};
+  font-size: ${theme.fontSize.sm};
   font-weight: ${theme.fontWeight.medium};
+  border: 1px solid ${theme.colors.border.darker};
 `;
 
 const Quantity = styled.span<{ level: string }>`
-  font-weight: ${theme.fontWeight.semibold};
+  font-weight: ${theme.fontWeight.bold};
   color: ${({ level }) => {
     const colors = {
       low: theme.colors.status.danger,
@@ -81,28 +82,28 @@ const Quantity = styled.span<{ level: string }>`
 const StockBadge = styled.span<{ level: string }>`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: ${theme.borderRadius.xl};
-  background-color: ${({ level }) => {
+  gap: ${theme.spacing.xs};
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  border-radius: ${theme.borderRadius.xs};
+  background: ${({ level }) => {
     const colors = {
-      low: '#DC262620',
-      medium: '#F59E0B20',
-      good: '#10B98120',
+      low: `${theme.colors.status.danger}20`,
+      medium: `${theme.colors.status.warning}20`,
+      good: `${theme.colors.status.completed}20`,
     };
     return colors[level as keyof typeof colors];
   }};
   color: ${({ level }) => {
     const colors = {
-      low: theme.colors.inventory.danger,
-      medium: theme.colors.inventory.warning,
-      good: theme.colors.inventory.success,
+      low: theme.colors.status.danger,
+      medium: theme.colors.status.warning,
+      good: theme.colors.status.completed,
     };
     return colors[level as keyof typeof colors];
   }};
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.xs};
-  font-weight: ${theme.fontWeight.semibold};
+  font-weight: ${theme.fontWeight.bold};
 `;
 
 const IconWrapper = styled.span`

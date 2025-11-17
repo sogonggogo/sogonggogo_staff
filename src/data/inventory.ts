@@ -1,5 +1,6 @@
 export interface InventoryItem {
   id: number;
+  productId: string; // 상품ID
   name: string;
   category: string;
   quantity: number;
@@ -8,11 +9,17 @@ export interface InventoryItem {
   stockLevel: 'low' | 'medium' | 'good';
   stockLevelText: string;
   lastRestocked: string;
+  saleStatus: '판매중' | '판매대기' | '판매승인' | '판매중지'; // 판매상태
+  price: number; // 가격
+  expectedPrice: number; // 예상판매가
+  hasStock: boolean; // 재고 유무
+  changeQuantity: number; // 증감수량
 }
 
 export const mockInventory: InventoryItem[] = [
   {
     id: 1,
+    productId: '10025723',
     name: '삼겹살',
     category: '육류',
     quantity: 15,
@@ -21,9 +28,15 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'low',
     stockLevelText: '부족',
     lastRestocked: '2024-11-10',
+    saleStatus: '판매중',
+    price: 25000,
+    expectedPrice: 28000,
+    hasStock: true,
+    changeQuantity: 0,
   },
   {
     id: 2,
+    productId: '10025724',
     name: '김치',
     category: '채소',
     quantity: 30,
@@ -32,9 +45,15 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'good',
     stockLevelText: '충분',
     lastRestocked: '2024-11-13',
+    saleStatus: '판매중',
+    price: 15000,
+    expectedPrice: 18000,
+    hasStock: true,
+    changeQuantity: 0,
   },
   {
     id: 3,
+    productId: '10025725',
     name: '햄',
     category: '육가공',
     quantity: 8,
@@ -43,9 +62,15 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'medium',
     stockLevelText: '보통',
     lastRestocked: '2024-11-11',
+    saleStatus: '판매대기',
+    price: 12000,
+    expectedPrice: 15000,
+    hasStock: true,
+    changeQuantity: 0,
   },
   {
     id: 4,
+    productId: '10025726',
     name: '라면',
     category: '면류',
     quantity: 120,
@@ -54,9 +79,15 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'good',
     stockLevelText: '충분',
     lastRestocked: '2024-11-12',
+    saleStatus: '판매중',
+    price: 5000,
+    expectedPrice: 6000,
+    hasStock: true,
+    changeQuantity: 0,
   },
   {
     id: 5,
+    productId: '10025727',
     name: '소시지',
     category: '육가공',
     quantity: 25,
@@ -65,9 +96,15 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'good',
     stockLevelText: '충분',
     lastRestocked: '2024-11-13',
+    saleStatus: '판매승인',
+    price: 18000,
+    expectedPrice: 20000,
+    hasStock: true,
+    changeQuantity: 0,
   },
   {
     id: 6,
+    productId: '10025728',
     name: '두부',
     category: '채소',
     quantity: 40,
@@ -76,9 +113,15 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'good',
     stockLevelText: '충분',
     lastRestocked: '2024-11-14',
+    saleStatus: '판매중',
+    price: 3000,
+    expectedPrice: 3500,
+    hasStock: true,
+    changeQuantity: 0,
   },
   {
     id: 7,
+    productId: '10025729',
     name: '떡',
     category: '기타',
     quantity: 6,
@@ -87,9 +130,15 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'low',
     stockLevelText: '부족',
     lastRestocked: '2024-11-09',
+    saleStatus: '판매중지',
+    price: 8000,
+    expectedPrice: 10000,
+    hasStock: false,
+    changeQuantity: 0,
   },
   {
     id: 8,
+    productId: '10025730',
     name: '치즈',
     category: '유제품',
     quantity: 12,
@@ -98,5 +147,10 @@ export const mockInventory: InventoryItem[] = [
     stockLevel: 'good',
     stockLevelText: '충분',
     lastRestocked: '2024-11-13',
+    saleStatus: '판매중',
+    price: 22000,
+    expectedPrice: 25000,
+    hasStock: true,
+    changeQuantity: 0,
   },
 ];

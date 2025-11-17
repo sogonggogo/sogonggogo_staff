@@ -123,7 +123,7 @@ const DetailStatus = styled.div`
 `;
 
 const DetailSection = styled.div`
-  margin-bottom: ${theme.spacing.xxl};
+  margin-bottom: ${theme.spacing.md};
 `;
 
 const DetailRow = styled.div`
@@ -134,8 +134,8 @@ const DetailRow = styled.div`
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.base};
 
-  &: last-child {
-    border-bottom: 1px solid ${theme.colors.border.darker};
+  &: first-of-type {
+    border-top: 1px solid ${theme.colors.border.darker};
   }
 `;
 
