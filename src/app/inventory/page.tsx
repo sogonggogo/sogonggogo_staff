@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { mockInventory, InventoryItem } from "@/data/inventory";
-import { ChevronDown, Search } from "lucide-react";
+import { mockInventory } from "@/data/inventory";
+import { ChevronDown } from "lucide-react";
 
 const Container = styled.div`
   padding: ${theme.spacing.xxxl};
@@ -43,78 +43,22 @@ const FilterRow = styled.div`
   align-items: center;
   gap: ${theme.spacing.lg};
   margin-bottom: ${theme.spacing.lg};
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  width: 50%;
 `;
 
 const FilterLabel = styled.label`
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.base};
   color: ${theme.colors.text.white};
-  min-width: 120px;
-`;
-
-const SearchInputWrapper = styled.div`
-  display: flex;
-  background: ${theme.colors.background.darkest};
-  border: 1px solid ${theme.colors.border.darker};
-  border-radius: ${theme.borderRadius.sm};
-  overflow: hidden;
-  width: 50%;
-`;
-
-const SearchCategorySelect = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  background: ${theme.colors.background.darkest};
-  border-right: 1px solid ${theme.colors.border.dark};
-  cursor: pointer;
   min-width: 100px;
-`;
-
-const SearchCategoryText = styled.span`
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  color: ${theme.colors.text.white};
-  margin-right: ${theme.spacing.xs};
-`;
-
-const SearchCategoryDropdown = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: ${theme.colors.background.darker};
-  border: 1px solid ${theme.colors.border.dark};
-  border-radius: ${theme.borderRadius.sm};
-  margin-top: ${theme.spacing.xs};
-  z-index: 10;
-  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
-  box-shadow: ${theme.shadow.lg};
-`;
-
-const SearchCategoryOption = styled.div`
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  font-family: ${theme.fontFamily.nanumGothic};
-  font-size: ${theme.fontSize.base};
-  color: ${theme.colors.text.white};
-  cursor: pointer;
-  transition: ${theme.transition.all};
-
-  &:hover {
-    background: ${theme.colors.background.darkest};
-  }
 `;
 
 const SearchInput = styled.input`
   flex: 1;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
-  background: transparent;
-  border: none;
+  background: ${theme.colors.background.darkest};
+  border: 1px solid ${theme.colors.border.darker};
+  border-radius: ${theme.borderRadius.sm};
   color: ${theme.colors.text.white};
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.base};
@@ -125,6 +69,7 @@ const SearchInput = styled.input`
 
   &:focus {
     outline: none;
+    border-color: ${theme.colors.brand.blue};
   }
 `;
 
@@ -152,7 +97,8 @@ const StatusButton = styled.button<{ active: boolean }>`
   }
 `;
 
-const CategoryButton = styled.button`
+const CategoryButton = styled.div`
+  position: relative;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
   background: ${theme.colors.background.darkest};
   border: 1px solid ${theme.colors.border.darker};
@@ -164,7 +110,40 @@ const CategoryButton = styled.button`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.sm};
-  min-width: 200px;
+  transition: ${theme.transition.all};
+
+  &:hover {
+    background: ${theme.colors.background.dark};
+  }
+`;
+
+const CategoryDropdown = styled.div<{ isOpen: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: ${theme.colors.background.darker};
+  border: 1px solid ${theme.colors.border.dark};
+  border-radius: ${theme.borderRadius.sm};
+  margin-top: ${theme.spacing.xs};
+  z-index: 10;
+  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  box-shadow: ${theme.shadow.lg};
+  max-height: 300px;
+  overflow-y: auto;
+`;
+
+const CategoryOption = styled.div`
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  font-family: ${theme.fontFamily.nanumGothic};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.white};
+  cursor: pointer;
+  transition: ${theme.transition.all};
+
+  &:hover {
+    background: ${theme.colors.background.darkest};
+  }
 `;
 
 const ActionBar = styled.div`
@@ -333,23 +312,38 @@ const PriceText = styled.span`
 
 export default function InventoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState<"상품명" | "상품ID">(
-    "상품명"
+  const [isProductCategoryDropdownOpen, setIsProductCategoryDropdownOpen] =
+    useState(false);
+  const [selectedProductCategory, setSelectedProductCategory] =
+    useState<string>("전체");
+  const [saleStatus, setSaleStatus] = useState<"전체" | "판매중" | "판매중지">(
+    "전체"
   );
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [saleStatus, setSaleStatus] = useState<
-    "전체" | "판매대기" | "판매승인" | "판매중지"
-  >("전체");
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
+  // 데이터에서 고유한 카테고리 추출
+  const uniqueCategories = [
+    "전체",
+    ...Array.from(new Set(mockInventory.map((item) => item.category))),
+  ];
+
   const filteredItems = mockInventory.filter((item) => {
-    const matchesSearch =
-      searchCategory === "상품명"
-        ? item.name.toLowerCase().includes(searchTerm.toLowerCase())
-        : item.productId.toLowerCase().includes(searchTerm.toLowerCase());
+    // 검색어 필터링 (상품명 또는 상품ID)
+    const matchesSearch = searchTerm
+      ? item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.productId.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
+
+    // 판매상태 필터링
     const matchesStatus =
       saleStatus === "전체" || item.saleStatus === saleStatus;
-    return matchesSearch && matchesStatus;
+
+    // 카테고리 필터링
+    const matchesCategory =
+      selectedProductCategory === "전체" ||
+      item.category === selectedProductCategory;
+
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -366,26 +360,26 @@ export default function InventoryPage() {
     );
   };
 
-  const categoryDropdownRef = useRef<HTMLDivElement>(null);
+  const productCategoryDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        categoryDropdownRef.current &&
-        !categoryDropdownRef.current.contains(event.target as Node)
+        productCategoryDropdownRef.current &&
+        !productCategoryDropdownRef.current.contains(event.target as Node)
       ) {
-        setIsCategoryDropdownOpen(false);
+        setIsProductCategoryDropdownOpen(false);
       }
     };
 
-    if (isCategoryDropdownOpen) {
+    if (isProductCategoryDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isCategoryDropdownOpen]);
+  }, [isProductCategoryDropdownOpen]);
 
   return (
     <Container>
@@ -397,39 +391,12 @@ export default function InventoryPage() {
       <FilterSection>
         <FilterRow>
           <FilterLabel>검색어</FilterLabel>
-          <SearchInputWrapper>
-            <SearchCategorySelect
-              ref={categoryDropdownRef}
-              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-            >
-              <SearchCategoryText>{searchCategory}</SearchCategoryText>
-              <ChevronDown size={16} />
-              <SearchCategoryDropdown isOpen={isCategoryDropdownOpen}>
-                <SearchCategoryOption
-                  onClick={() => {
-                    setSearchCategory("상품명");
-                    setIsCategoryDropdownOpen(false);
-                  }}
-                >
-                  상품명
-                </SearchCategoryOption>
-                <SearchCategoryOption
-                  onClick={() => {
-                    setSearchCategory("상품ID");
-                    setIsCategoryDropdownOpen(false);
-                  }}
-                >
-                  상품ID
-                </SearchCategoryOption>
-              </SearchCategoryDropdown>
-            </SearchCategorySelect>
-            <SearchInput
-              type="text"
-              placeholder={`${searchCategory}을 입력해주세요`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </SearchInputWrapper>
+          <SearchInput
+            type="text"
+            placeholder="상품명 또는 상품ID를 입력해주세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </FilterRow>
         <FilterRow>
           <FilterLabel>판매상태</FilterLabel>
@@ -441,16 +408,10 @@ export default function InventoryPage() {
               전체
             </StatusButton>
             <StatusButton
-              active={saleStatus === "판매대기"}
-              onClick={() => setSaleStatus("판매대기")}
+              active={saleStatus === "판매중"}
+              onClick={() => setSaleStatus("판매중")}
             >
-              판매대기
-            </StatusButton>
-            <StatusButton
-              active={saleStatus === "판매승인"}
-              onClick={() => setSaleStatus("판매승인")}
-            >
-              판매승인
+              판매중
             </StatusButton>
             <StatusButton
               active={saleStatus === "판매중지"}
@@ -461,10 +422,31 @@ export default function InventoryPage() {
           </StatusButtonGroup>
         </FilterRow>
         <FilterRow>
-          <FilterLabel>상품 카테고리</FilterLabel>
-          <CategoryButton>
-            상품 카테고리 찾기
+          <FilterLabel>카테고리</FilterLabel>
+          <CategoryButton
+            ref={productCategoryDropdownRef}
+            onClick={() =>
+              setIsProductCategoryDropdownOpen(!isProductCategoryDropdownOpen)
+            }
+          >
+            {selectedProductCategory === "전체"
+              ? "카테고리 찾기"
+              : selectedProductCategory}
             <ChevronDown size={16} />
+            <CategoryDropdown isOpen={isProductCategoryDropdownOpen}>
+              {uniqueCategories.map((category) => (
+                <CategoryOption
+                  key={category}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedProductCategory(category);
+                    setIsProductCategoryDropdownOpen(false);
+                  }}
+                >
+                  {category}
+                </CategoryOption>
+              ))}
+            </CategoryDropdown>
           </CategoryButton>
         </FilterRow>
       </FilterSection>

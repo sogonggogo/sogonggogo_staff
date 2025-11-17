@@ -33,7 +33,7 @@ export interface InventoryItem {
   stockLevel: 'low' | 'medium' | 'good';
   stockLevelText: string;
   lastRestocked: string;
-  saleStatus: '판매중' | '판매대기' | '판매승인' | '판매중지'; // 판매상태
+  saleStatus: '판매중' | '판매중지'; // 판매상태
   price: number; // 가격
   expectedPrice: number; // 예상판매가
   hasStock: boolean; // 재고 유무
@@ -292,6 +292,58 @@ export const mockInventory: InventoryItem[] = [
     price: getPrice('바게트 빵'),
     expectedPrice: getExpectedPrice(getPrice('바게트 빵')),
     hasStock: true,
+    changeQuantity: 0,
+  },
+  // 판매중지 상태 아이템들
+  {
+    id: 12,
+    productId: '10025712',
+    name: '레드 와인',
+    category: getCategory('와인'),
+    quantity: 15,
+    unit: getUnit('와인'),
+    minStock: 20,
+    stockLevel: getStockLevel(15, 20),
+    stockLevelText: getStockLevelText(getStockLevel(15, 20)),
+    lastRestocked: '2024-11-10',
+    saleStatus: '판매중지',
+    price: getPrice('와인'),
+    expectedPrice: getExpectedPrice(getPrice('와인')),
+    hasStock: true,
+    changeQuantity: 0,
+  },
+  {
+    id: 13,
+    productId: '10025713',
+    name: '양고기 스테이크',
+    category: getCategory('스테이크'),
+    quantity: 8,
+    unit: getUnit('스테이크'),
+    minStock: 15,
+    stockLevel: getStockLevel(8, 15),
+    stockLevelText: getStockLevelText(getStockLevel(8, 15)),
+    lastRestocked: '2024-11-11',
+    saleStatus: '판매중지',
+    price: getPrice('스테이크'),
+    expectedPrice: getExpectedPrice(getPrice('스테이크')),
+    hasStock: true,
+    changeQuantity: 0,
+  },
+  {
+    id: 14,
+    productId: '10025714',
+    name: '치즈',
+    category: getCategory('치즈'),
+    quantity: 0,
+    unit: '개',
+    minStock: 20,
+    stockLevel: getStockLevel(0, 20),
+    stockLevelText: getStockLevelText(getStockLevel(0, 20)),
+    lastRestocked: '2024-10-28',
+    saleStatus: '판매중지',
+    price: 12000,
+    expectedPrice: getExpectedPrice(12000),
+    hasStock: false,
     changeQuantity: 0,
   },
 ];
