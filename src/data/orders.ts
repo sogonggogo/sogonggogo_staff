@@ -22,31 +22,60 @@ export interface Order {
 const getItemPrice = (menuId: number | undefined, itemName: string): number => {
   if (!menuId) return 10000; // 기본 가격
 
-  // 통일된 메뉴명 사용
+  // 메뉴별 개별 가격
   const itemPrices: Record<string, number> = {
-    // 통일된 메뉴
-    와인: 23333, // 평균 가격
-    스테이크: 31250, // 평균 가격
-    커피: 15000, // 평균 가격
-    
-    // 발렌타인 디너
+    "발렌타인-와인": 25000,
+    "발렌타인-스테이크": 35000,
     "하트 장식": 14500,
     "큐피드 장식": 14500,
-    
-    // 프렌치 디너
+
+    // 프렌치 디너 전용
+    "프렌치-커피": 15000,
+    "프렌치-와인": 25000,
     샐러드: 15000,
-    
-    // 잉글리시 디너
+    "프렌치-스테이크": 35000,
+
+    // 잉글리시 디너 전용
     "에그 스크램블": 7000,
     베이컨: 8000,
     빵: 5000,
-    
-    // 샴페인 축제 디너
+    "잉글리시-스테이크": 35000,
+
+    // 샴페인 축제 디너 전용
     샴페인: 25000,
-    "바게트 빵": 3750,
+    "바게트 빵": 4000,
+    "샴페인-커피": 15000,
+    "샴페인-와인": 25000,
+    "샴페인-스테이크": 35000,
   };
 
-  return itemPrices[itemName] || 10000;
+  // 메뉴별 아이템 키 매핑
+  const getItemPriceKey = (menuId: number, itemName: string): string => {
+    switch (menuId) {
+      case 1: // 발렌타인
+        if (itemName === "와인") return "발렌타인-와인";
+        if (itemName === "스테이크") return "발렌타인-스테이크";
+        return itemName;
+      case 2: // 프렌치
+        if (itemName === "커피") return "프렌치-커피";
+        if (itemName === "와인") return "프렌치-와인";
+        if (itemName === "스테이크") return "프렌치-스테이크";
+        return itemName;
+      case 3: // 잉글리시
+        if (itemName === "스테이크") return "잉글리시-스테이크";
+        return itemName;
+      case 4: // 샴페인
+        if (itemName === "커피") return "샴페인-커피";
+        if (itemName === "와인") return "샴페인-와인";
+        if (itemName === "스테이크") return "샴페인-스테이크";
+        return itemName;
+      default:
+        return itemName;
+    }
+  };
+
+  const priceKey = getItemPriceKey(menuId, itemName);
+  return itemPrices[priceKey] || 10000;
 };
 
 export const getStatusText = (status: OrderStatus): string => {
@@ -90,11 +119,11 @@ export const mockOrders: Order[] = [
     time: '18:45',
     menuId: 2, // 프렌치 디너
     items: [
-      { name: '커피', quantity: 1, price: getItemPrice(2, '커피') },
-      { name: '와인', quantity: 1, price: getItemPrice(2, '와인') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(2, '스테이크') },
+      { name: '커피', quantity: 1, price: getItemPrice(2, '커피') }, // 15000
+      { name: '와인', quantity: 1, price: getItemPrice(2, '와인') }, // 25000
+      { name: '스테이크', quantity: 1, price: getItemPrice(2, '스테이크') }, // 35000
     ],
-    total: 50000,
+    total: 75000, // 15000 + 25000 + 35000
   },
   // 잉글리시 디너 (기본 아이템 + 추가 아이템)
   {
@@ -106,12 +135,12 @@ export const mockOrders: Order[] = [
     time: '18:15',
     menuId: 3, // 잉글리시 디너
     items: [
-      { name: '에그 스크램블', quantity: 2, price: getItemPrice(3, '에그 스크램블') },
-      { name: '베이컨', quantity: 1, price: getItemPrice(3, '베이컨') },
-      { name: '빵', quantity: 1, price: getItemPrice(3, '빵') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(3, '스테이크') },
+      { name: '에그 스크램블', quantity: 2, price: getItemPrice(3, '에그 스크램블') }, // 7000 * 2 = 14000
+      { name: '베이컨', quantity: 1, price: getItemPrice(3, '베이컨') }, // 8000
+      { name: '빵', quantity: 1, price: getItemPrice(3, '빵') }, // 5000
+      { name: '스테이크', quantity: 1, price: getItemPrice(3, '스테이크') }, // 35000
     ],
-    total: 62000,
+    total: 62000, // 14000 + 8000 + 5000 + 35000
   },
   // 샴페인 축제 디너 (기본 아이템 모두 포함)
   {
@@ -123,13 +152,13 @@ export const mockOrders: Order[] = [
     time: '17:50',
     menuId: 4, // 샴페인 축제 디너
     items: [
-      { name: '샴페인', quantity: 1, price: getItemPrice(4, '샴페인') },
-      { name: '바게트 빵', quantity: 4, price: getItemPrice(4, '바게트 빵') },
-      { name: '커피', quantity: 1, price: getItemPrice(4, '커피') },
-      { name: '와인', quantity: 1, price: getItemPrice(4, '와인') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(4, '스테이크') },
+      { name: '샴페인', quantity: 1, price: getItemPrice(4, '샴페인') }, // 25000
+      { name: '바게트 빵', quantity: 4, price: getItemPrice(4, '바게트 빵') }, // 4000 * 4 = 16000
+      { name: '커피', quantity: 1, price: getItemPrice(4, '커피') }, // 15000
+      { name: '와인', quantity: 1, price: getItemPrice(4, '와인') }, // 25000
+      { name: '스테이크', quantity: 1, price: getItemPrice(4, '스테이크') }, // 35000
     ],
-    total: 120000,
+    total: 116000, // 25000 + 16000 + 15000 + 25000 + 35000
   },
   // 새로운 주문 1: 발렌타인 디너 (하트 장식, 큐피드 장식 제거)
   {
@@ -141,10 +170,10 @@ export const mockOrders: Order[] = [
     time: '19:00',
     menuId: 1, // 발렌타인 디너
     items: [
-      { name: '와인', quantity: 1, price: getItemPrice(1, '와인') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(1, '스테이크') },
+      { name: '와인', quantity: 1, price: getItemPrice(1, '와인') }, // 25000
+      { name: '스테이크', quantity: 1, price: getItemPrice(1, '스테이크') }, // 35000
     ],
-    total: 60000,
+    total: 60000, // 25000 + 35000
   },
   // 새로운 주문 2: 프렌치 디너 (기본 아이템 모두 포함)
   {
@@ -156,12 +185,12 @@ export const mockOrders: Order[] = [
     time: '19:15',
     menuId: 2, // 프렌치 디너
     items: [
-      { name: '커피', quantity: 1, price: getItemPrice(2, '커피') },
-      { name: '와인', quantity: 1, price: getItemPrice(2, '와인') },
-      { name: '샐러드', quantity: 1, price: getItemPrice(2, '샐러드') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(2, '스테이크') },
+      { name: '커피', quantity: 1, price: getItemPrice(2, '커피') }, // 15000
+      { name: '와인', quantity: 1, price: getItemPrice(2, '와인') }, // 25000
+      { name: '샐러드', quantity: 1, price: getItemPrice(2, '샐러드') }, // 15000
+      { name: '스테이크', quantity: 1, price: getItemPrice(2, '스테이크') }, // 35000
     ],
-    total: 65000,
+    total: 90000, // 15000 + 25000 + 15000 + 35000
   },
   // 새로운 주문 3: 잉글리시 디너 (베이컨 제거, 에그 스크램블 추가)
   {
@@ -173,11 +202,11 @@ export const mockOrders: Order[] = [
     time: '19:30',
     menuId: 3, // 잉글리시 디너
     items: [
-      { name: '에그 스크램블', quantity: 2, price: getItemPrice(3, '에그 스크램블') },
-      { name: '빵', quantity: 2, price: getItemPrice(3, '빵') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(3, '스테이크') },
+      { name: '에그 스크램블', quantity: 2, price: getItemPrice(3, '에그 스크램블') }, // 7000 * 2 = 14000
+      { name: '빵', quantity: 2, price: getItemPrice(3, '빵') }, // 5000 * 2 = 10000
+      { name: '스테이크', quantity: 1, price: getItemPrice(3, '스테이크') }, // 35000
     ],
-    total: 54000,
+    total: 59000, // 14000 + 10000 + 35000
   },
   // 새로운 주문 4: 샴페인 축제 디너 (와인 제거)
   {
@@ -189,12 +218,12 @@ export const mockOrders: Order[] = [
     time: '19:45',
     menuId: 4, // 샴페인 축제 디너
     items: [
-      { name: '샴페인', quantity: 1, price: getItemPrice(4, '샴페인') },
-      { name: '바게트 빵', quantity: 4, price: getItemPrice(4, '바게트 빵') },
-      { name: '커피', quantity: 1, price: getItemPrice(4, '커피') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(4, '스테이크') },
+      { name: '샴페인', quantity: 1, price: getItemPrice(4, '샴페인') }, // 25000
+      { name: '바게트 빵', quantity: 4, price: getItemPrice(4, '바게트 빵') }, // 4000 * 4 = 16000
+      { name: '커피', quantity: 1, price: getItemPrice(4, '커피') }, // 15000
+      { name: '스테이크', quantity: 1, price: getItemPrice(4, '스테이크') }, // 35000
     ],
-    total: 95000,
+    total: 91000, // 25000 + 16000 + 15000 + 35000
   },
   // 새로운 주문 5: 발렌타인 디너 (큐피드 장식만 제거, 하트 장식 추가 수량)
   {
@@ -206,10 +235,10 @@ export const mockOrders: Order[] = [
     time: '20:00',
     menuId: 1, // 발렌타인 디너
     items: [
-      { name: '와인', quantity: 1, price: getItemPrice(1, '와인') },
-      { name: '스테이크', quantity: 1, price: getItemPrice(1, '스테이크') },
-      { name: '하트 장식', quantity: 2, price: getItemPrice(1, '하트 장식') },
+      { name: '와인', quantity: 1, price: getItemPrice(1, '와인') }, // 25000
+      { name: '스테이크', quantity: 1, price: getItemPrice(1, '스테이크') }, // 35000
+      { name: '하트 장식', quantity: 2, price: getItemPrice(1, '하트 장식') }, // 14500 * 2 = 29000
     ],
-    total: 88500,
+    total: 89000, // 25000 + 35000 + 29000
   },
 ];

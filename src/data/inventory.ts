@@ -1,25 +1,28 @@
-// additionalOptions.ts의 가격 정보 (통일된 메뉴명 사용)
+// additionalOptions.ts의 가격 정보 (메뉴별 개별 가격)
 const itemPrices: Record<string, number> = {
-  // 통일된 메뉴
-  와인: 23333, // 평균 가격
-  스테이크: 31250, // 평균 가격
-  커피: 15000, // 평균 가격
-  
-  // 발렌타인 디너
+  "발렌타인-와인": 25000,
+  "발렌타인-스테이크": 35000,
   "하트 장식": 14500,
   "큐피드 장식": 14500,
-  
-  // 프렌치 디너
+
+  // 프렌치 디너 전용
+  "프렌치-커피": 15000,
+  "프렌치-와인": 25000,
   샐러드: 15000,
-  
-  // 잉글리시 디너
+  "프렌치-스테이크": 35000,
+
+  // 잉글리시 디너 전용
   "에그 스크램블": 7000,
   베이컨: 8000,
   빵: 5000,
-  
-  // 샴페인 축제 디너
+  "잉글리시-스테이크": 35000,
+
+  // 샴페인 축제 디너 전용
   샴페인: 25000,
-  "바게트 빵": 3750,
+  "바게트 빵": 4000,
+  "샴페인-커피": 15000,
+  "샴페인-와인": 25000,
+  "샴페인-스테이크": 35000,
 };
 
 export interface InventoryItem {
@@ -94,6 +97,16 @@ const getStockLevelText = (level: 'low' | 'medium' | 'good'): string => {
 };
 
 const getPrice = (name: string): number => {
+  // 메뉴별 개별 가격이 있는 경우 평균 가격 계산
+  if (name === '와인') {
+    return Math.round((itemPrices['발렌타인-와인'] + itemPrices['프렌치-와인'] + itemPrices['샴페인-와인']) / 3);
+  }
+  if (name === '스테이크') {
+    return Math.round((itemPrices['발렌타인-스테이크'] + itemPrices['프렌치-스테이크'] + itemPrices['잉글리시-스테이크'] + itemPrices['샴페인-스테이크']) / 4);
+  }
+  if (name === '커피') {
+    return Math.round((itemPrices['프렌치-커피'] + itemPrices['샴페인-커피']) / 2);
+  }
   return itemPrices[name] || 10000;
 };
 
@@ -102,7 +115,7 @@ const getExpectedPrice = (price: number): number => {
 };
 
 export const mockInventory: InventoryItem[] = [
-  // 통일된 메뉴
+  // 공통 재료 (여러 메뉴에서 사용, 평균 가격 적용)
   {
     id: 1,
     productId: '10025701',
@@ -115,7 +128,7 @@ export const mockInventory: InventoryItem[] = [
     stockLevelText: getStockLevelText(getStockLevel(67, 50)),
     lastRestocked: '2024-11-13',
     saleStatus: '판매중',
-    price: getPrice('와인'),
+    price: getPrice('와인'), // 25000 (평균)
     expectedPrice: getExpectedPrice(getPrice('와인')),
     hasStock: true,
     changeQuantity: 0,
@@ -132,7 +145,7 @@ export const mockInventory: InventoryItem[] = [
     stockLevelText: getStockLevelText(getStockLevel(65, 50)),
     lastRestocked: '2024-11-12',
     saleStatus: '판매중',
-    price: getPrice('스테이크'),
+    price: getPrice('스테이크'), // 35000 (평균)
     expectedPrice: getExpectedPrice(getPrice('스테이크')),
     hasStock: true,
     changeQuantity: 0,
@@ -149,7 +162,7 @@ export const mockInventory: InventoryItem[] = [
     stockLevelText: getStockLevelText(getStockLevel(55, 40)),
     lastRestocked: '2024-11-14',
     saleStatus: '판매중',
-    price: getPrice('커피'),
+    price: getPrice('커피'), // 15000 (평균)
     expectedPrice: getExpectedPrice(getPrice('커피')),
     hasStock: true,
     changeQuantity: 0,
