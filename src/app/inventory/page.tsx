@@ -185,9 +185,49 @@ const ActionButton = styled.button`
   font-size: ${theme.fontSize.base};
   cursor: pointer;
   transition: ${theme.transition.all};
+  position: relative;
 
   &:hover {
     background: ${theme.colors.background.dark};
+  }
+`;
+
+const SaleStatusDropdownWrapper = styled.div`
+  position: relative;
+`;
+
+const SaleStatusDropdown = styled.div<{ isOpen: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: ${theme.colors.background.darker};
+  border: 1px solid ${theme.colors.border.dark};
+  border-radius: ${theme.borderRadius.sm};
+  margin-top: ${theme.spacing.xs};
+  z-index: 10;
+  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  box-shadow: ${theme.shadow.lg};
+  min-width: 150px;
+`;
+
+const SaleStatusOption = styled.div`
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  font-family: ${theme.fontFamily.nanumGothic};
+  font-size: ${theme.fontSize.base};
+  color: ${theme.colors.text.white};
+  cursor: pointer;
+  transition: ${theme.transition.all};
+
+  &:hover {
+    background: ${theme.colors.background.darkest};
+  }
+
+  &:first-of-type {
+    border-radius: ${theme.borderRadius.sm} ${theme.borderRadius.sm} 0 0;
+  }
+
+  &:last-of-type {
+    border-radius: 0 0 ${theme.borderRadius.sm} ${theme.borderRadius.sm};
   }
 `;
 
@@ -326,6 +366,8 @@ export default function InventoryPage() {
   const [selectedItemForModal, setSelectedItemForModal] =
     useState<InventoryItem | null>(null);
   const [inventory, setInventory] = useState(mockInventory);
+  const [isSaleStatusDropdownOpen, setIsSaleStatusDropdownOpen] =
+    useState(false);
 
   // 데이터에서 고유한 카테고리 추출
   const uniqueCategories = [
@@ -350,6 +392,26 @@ export default function InventoryPage() {
         item.id === itemId ? { ...item, quantity: newQuantity } : item
       )
     );
+  };
+
+  // 판매상태 변경
+  const handleChangeSaleStatus = (
+    newStatus: "판매중" | "판매중지"
+  ) => {
+    if (selectedItems.length === 0) {
+      alert("변경할 항목을 선택해주세요.");
+      return;
+    }
+
+    setInventory((prev) =>
+      prev.map((item) =>
+        selectedItems.includes(item.id)
+          ? { ...item, saleStatus: newStatus }
+          : item
+      )
+    );
+    setIsSaleStatusDropdownOpen(false);
+    setSelectedItems([]);
   };
 
   // 테이블 셀 렌더링 함수
@@ -412,6 +474,7 @@ export default function InventoryPage() {
   };
 
   const productCategoryDropdownRef = useRef<HTMLDivElement>(null);
+  const saleStatusDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -421,16 +484,22 @@ export default function InventoryPage() {
       ) {
         setIsProductCategoryDropdownOpen(false);
       }
+      if (
+        saleStatusDropdownRef.current &&
+        !saleStatusDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsSaleStatusDropdownOpen(false);
+      }
     };
 
-    if (isProductCategoryDropdownOpen) {
+    if (isProductCategoryDropdownOpen || isSaleStatusDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isProductCategoryDropdownOpen]);
+  }, [isProductCategoryDropdownOpen, isSaleStatusDropdownOpen]);
 
   return (
     <Container>
@@ -501,7 +570,27 @@ export default function InventoryPage() {
               <option key={size}>{size}개씩 보기</option>
             ))}
           </PageSizeSelect>
-          <ActionButton>판매상태 변경</ActionButton>
+          <SaleStatusDropdownWrapper ref={saleStatusDropdownRef}>
+            <ActionButton
+              onClick={() =>
+                setIsSaleStatusDropdownOpen(!isSaleStatusDropdownOpen)
+              }
+            >
+              판매상태 변경
+            </ActionButton>
+            <SaleStatusDropdown isOpen={isSaleStatusDropdownOpen}>
+              <SaleStatusOption
+                onClick={() => handleChangeSaleStatus("판매중")}
+              >
+                판매중
+              </SaleStatusOption>
+              <SaleStatusOption
+                onClick={() => handleChangeSaleStatus("판매중지")}
+              >
+                판매중지
+              </SaleStatusOption>
+            </SaleStatusDropdown>
+          </SaleStatusDropdownWrapper>
           <ActionButton>선택항목 삭제</ActionButton>
           <PrimaryButton>+ 상품 등록</PrimaryButton>
         </ActionButtons>
