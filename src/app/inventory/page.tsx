@@ -11,6 +11,7 @@ import {
   pageSizeOptions,
   type SaleStatusType,
 } from "@/config/inventoryTableConfig";
+import StockManageModal from "@/components/inventory/StockManageModal";
 
 const Container = styled.div`
   padding: ${theme.spacing.xxxl};
@@ -322,12 +323,34 @@ export default function InventoryPage() {
     useState<string>("전체");
   const [saleStatus, setSaleStatus] = useState<SaleStatusType>("전체");
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedItemForModal, setSelectedItemForModal] =
+    useState<InventoryItem | null>(null);
+  const [inventory, setInventory] = useState(mockInventory);
 
   // 데이터에서 고유한 카테고리 추출
   const uniqueCategories = [
     "전체",
-    ...Array.from(new Set(mockInventory.map((item) => item.category))),
+    ...Array.from(new Set(inventory.map((item) => item.category))),
   ];
+
+  // 재고 관리 모달 열기
+  const handleOpenStockModal = (item: InventoryItem) => {
+    setSelectedItemForModal(item);
+  };
+
+  // 재고 관리 모달 닫기
+  const handleCloseStockModal = () => {
+    setSelectedItemForModal(null);
+  };
+
+  // 재고 저장
+  const handleSaveStock = (itemId: number, newQuantity: number) => {
+    setInventory((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
 
   // 테이블 셀 렌더링 함수
   const renderCell = (columnId: string, item: InventoryItem) => {
@@ -353,13 +376,17 @@ export default function InventoryPage() {
       case "changeQuantity":
         return <PriceText>{item.changeQuantity}</PriceText>;
       case "manage":
-        return <StockManageButton>재고 관리</StockManageButton>;
+        return (
+          <StockManageButton onClick={() => handleOpenStockModal(item)}>
+            재고 관리
+          </StockManageButton>
+        );
       default:
         return null;
     }
   };
 
-  const filteredItems = mockInventory.filter((item) => {
+  const filteredItems = inventory.filter((item) => {
     // 검색어 필터링 (상품명 또는 상품ID)
     const matchesSearch = searchTerm
       ? item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -505,6 +532,14 @@ export default function InventoryPage() {
           </tbody>
         </Table>
       </TableContainer>
+
+      {selectedItemForModal && (
+        <StockManageModal
+          item={selectedItemForModal}
+          onClose={handleCloseStockModal}
+          onSave={handleSaveStock}
+        />
+      )}
     </Container>
   );
 }
