@@ -3,8 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { mockInventory } from "@/data/inventory";
+import { mockInventory, type InventoryItem } from "@/data/inventory";
 import { ChevronDown } from "lucide-react";
+import {
+  inventoryTableColumns,
+  saleStatusOptions,
+  pageSizeOptions,
+  type SaleStatusType,
+} from "@/config/inventoryTableConfig";
 
 const Container = styled.div`
   padding: ${theme.spacing.xxxl};
@@ -229,7 +235,7 @@ const Th = styled.th<{ width?: string }>`
   color: ${theme.colors.text.white};
   border-right: 1px solid ${theme.colors.border.dark};
   border-bottom: 1px solid ${theme.colors.border.dark};
-  width: ${({ width }) => width || 'auto'};
+  width: ${({ width }) => width || "auto"};
 
   &:last-child {
     border-right: none;
@@ -314,9 +320,7 @@ export default function InventoryPage() {
     useState(false);
   const [selectedProductCategory, setSelectedProductCategory] =
     useState<string>("전체");
-  const [saleStatus, setSaleStatus] = useState<"전체" | "판매중" | "판매중지">(
-    "전체"
-  );
+  const [saleStatus, setSaleStatus] = useState<SaleStatusType>("전체");
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   // 데이터에서 고유한 카테고리 추출
@@ -324,6 +328,36 @@ export default function InventoryPage() {
     "전체",
     ...Array.from(new Set(mockInventory.map((item) => item.category))),
   ];
+
+  // 테이블 셀 렌더링 함수
+  const renderCell = (columnId: string, item: InventoryItem) => {
+    switch (columnId) {
+      case "select":
+        return (
+          <Checkbox
+            type="checkbox"
+            checked={selectedItems.includes(item.id)}
+            onChange={() => handleSelectItem(item.id)}
+          />
+        );
+      case "productId":
+        return <PriceText>{item.productId}</PriceText>;
+      case "name":
+        return <ProductNameBadge>{item.name}</ProductNameBadge>;
+      case "saleStatus":
+        return <StatusBadge>{item.saleStatus}</StatusBadge>;
+      case "quantity":
+        return <PriceText>{item.quantity}</PriceText>;
+      case "price":
+        return <PriceText>{item.price.toLocaleString("ko-KR")}원</PriceText>;
+      case "changeQuantity":
+        return <PriceText>{item.changeQuantity}</PriceText>;
+      case "manage":
+        return <StockManageButton>재고 관리</StockManageButton>;
+      default:
+        return null;
+    }
+  };
 
   const filteredItems = mockInventory.filter((item) => {
     // 검색어 필터링 (상품명 또는 상품ID)
@@ -391,24 +425,15 @@ export default function InventoryPage() {
         <FilterRow>
           <FilterLabel>판매상태</FilterLabel>
           <StatusButtonGroup>
-            <StatusButton
-              active={saleStatus === "전체"}
-              onClick={() => setSaleStatus("전체")}
-            >
-              전체
-            </StatusButton>
-            <StatusButton
-              active={saleStatus === "판매중"}
-              onClick={() => setSaleStatus("판매중")}
-            >
-              판매중
-            </StatusButton>
-            <StatusButton
-              active={saleStatus === "판매중지"}
-              onClick={() => setSaleStatus("판매중지")}
-            >
-              판매중지
-            </StatusButton>
+            {saleStatusOptions.map((status) => (
+              <StatusButton
+                key={status}
+                active={saleStatus === status}
+                onClick={() => setSaleStatus(status)}
+              >
+                {status}
+              </StatusButton>
+            ))}
           </StatusButtonGroup>
         </FilterRow>
         <FilterRow>
@@ -445,13 +470,12 @@ export default function InventoryPage() {
         <ProductCount>상품수량 총 {filteredItems.length}개</ProductCount>
         <ActionButtons>
           <PageSizeSelect>
-            <option>20개씩 보기</option>
-            <option>50개씩 보기</option>
-            <option>100개씩 보기</option>
+            {pageSizeOptions.map((size) => (
+              <option key={size}>{size}개씩 보기</option>
+            ))}
           </PageSizeSelect>
           <ActionButton>판매상태 변경</ActionButton>
-          <ActionButton>재고기간 변경</ActionButton>
-          <ActionButton>선택</ActionButton>
+          <ActionButton>선택항목 삭제</ActionButton>
           <PrimaryButton>+ 상품 등록</PrimaryButton>
         </ActionButtons>
       </ActionBar>
@@ -460,50 +484,22 @@ export default function InventoryPage() {
         <Table>
           <TableHeader>
             <tr>
-              <Th width="80px">선택</Th>
-              <Th width="120px">상품ID</Th>
-              <Th>상품명</Th>
-              <Th width="120px">현재 상태</Th>
-              <Th width="100px">
-                재고
-                <ChevronDown size={14} style={{ marginLeft: 4 }} />
-              </Th>
-              <Th width="120px">가격</Th>
-              <Th width="100px">증감수량</Th>
-              <Th width="120px">재고 관리</Th>
+              {inventoryTableColumns.map((column) => (
+                <Th key={column.id} width={column.width}>
+                  {column.label}
+                  {column.sortable && (
+                    <ChevronDown size={14} style={{ marginLeft: 4 }} />
+                  )}
+                </Th>
+              ))}
             </tr>
           </TableHeader>
           <tbody>
             {filteredItems.map((item) => (
               <Tr key={item.id}>
-                <Td>
-                  <Checkbox
-                    type="checkbox"
-                    checked={selectedItems.includes(item.id)}
-                    onChange={() => handleSelectItem(item.id)}
-                  />
-                </Td>
-                <Td>
-                  <PriceText>{item.productId}</PriceText>
-                </Td>
-                <Td>
-                  <ProductNameBadge>{item.name}</ProductNameBadge>
-                </Td>
-                <Td>
-                  <StatusBadge>{item.saleStatus}</StatusBadge>
-                </Td>
-                <Td>
-                  <PriceText>{item.quantity}</PriceText>
-                </Td>
-                <Td>
-                  <PriceText>{item.price.toLocaleString("ko-KR")}원</PriceText>
-                </Td>
-                <Td>
-                  <PriceText>{item.changeQuantity}</PriceText>
-                </Td>
-                <Td>
-                  <StockManageButton>재고 관리</StockManageButton>
-                </Td>
+                {inventoryTableColumns.map((column) => (
+                  <Td key={column.id}>{renderCell(column.id, item)}</Td>
+                ))}
               </Tr>
             ))}
           </tbody>
