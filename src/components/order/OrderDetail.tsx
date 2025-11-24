@@ -268,10 +268,12 @@ export default function OrderDetail({ order }: OrderDetailProps) {
             <DetailTitle>{order.id}</DetailTitle>
             <DetailStatus>{getStatusText(order.status)}</DetailStatus>
           </HeaderInfo>
-          <ActionButtons>
-            <ActionButton variant="reject">거부</ActionButton>
-            <ActionButton variant="approve">승인</ActionButton>
-          </ActionButtons>
+          {order.status !== "delivered" && (
+            <ActionButtons>
+              <ActionButton variant="reject">거부</ActionButton>
+              <ActionButton variant="approve">승인</ActionButton>
+            </ActionButtons>
+          )}
         </DetailHeader>
 
         <TabContainer>

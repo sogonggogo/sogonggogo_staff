@@ -220,7 +220,7 @@ const TableHeader = styled.thead`
   background: ${theme.colors.background.darkest};
 `;
 
-const Th = styled.th`
+const Th = styled.th<{ width?: string }>`
   padding: ${theme.spacing.md} ${theme.spacing.lg};
   text-align: left;
   font-family: ${theme.fontFamily.nanumGothic};
@@ -229,6 +229,7 @@ const Th = styled.th`
   color: ${theme.colors.text.white};
   border-right: 1px solid ${theme.colors.border.dark};
   border-bottom: 1px solid ${theme.colors.border.dark};
+  width: ${({ width }) => width || 'auto'};
 
   &:last-child {
     border-right: none;
@@ -302,12 +303,6 @@ const StockManageButton = styled.button`
   }
 `;
 
-const StockStatus = styled.span<{ hasStock: boolean }>`
-  color: ${({ hasStock }) =>
-    hasStock ? theme.colors.status.completed : theme.colors.status.danger};
-  font-weight: ${theme.fontWeight.bold};
-`;
-
 const PriceText = styled.span`
   color: ${theme.colors.text.white};
   font-weight: ${theme.fontWeight.medium};
@@ -348,14 +343,6 @@ export default function InventoryPage() {
 
     return matchesSearch && matchesStatus && matchesCategory;
   });
-
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedItems(filteredItems.map((item) => item.id));
-    } else {
-      setSelectedItems([]);
-    }
-  };
 
   const handleSelectItem = (id: number) => {
     setSelectedItems((prev) =>
@@ -473,27 +460,17 @@ export default function InventoryPage() {
         <Table>
           <TableHeader>
             <tr>
-              <Th>
-                <Checkbox
-                  type="checkbox"
-                  checked={
-                    filteredItems.length > 0 &&
-                    selectedItems.length === filteredItems.length
-                  }
-                  onChange={handleSelectAll}
-                />
-              </Th>
-              <Th>상품ID</Th>
+              <Th width="80px">선택</Th>
+              <Th width="120px">상품ID</Th>
               <Th>상품명</Th>
-              <Th>현재 상태</Th>
-              <Th>
+              <Th width="120px">현재 상태</Th>
+              <Th width="100px">
                 재고
                 <ChevronDown size={14} style={{ marginLeft: 4 }} />
               </Th>
-              <Th>재고 유무</Th>
-              <Th>가격</Th>
-              <Th>예상판매가</Th>
-              <Th>증감수량</Th>
+              <Th width="120px">가격</Th>
+              <Th width="100px">증감수량</Th>
+              <Th width="120px">재고 관리</Th>
             </tr>
           </TableHeader>
           <tbody>
@@ -516,23 +493,16 @@ export default function InventoryPage() {
                   <StatusBadge>{item.saleStatus}</StatusBadge>
                 </Td>
                 <Td>
-                  <StockManageButton>재고 관리</StockManageButton>
-                </Td>
-                <Td>
-                  <StockStatus hasStock={item.hasStock}>
-                    {item.hasStock ? "O" : "X"}
-                  </StockStatus>
+                  <PriceText>{item.quantity}</PriceText>
                 </Td>
                 <Td>
                   <PriceText>{item.price.toLocaleString("ko-KR")}원</PriceText>
                 </Td>
                 <Td>
-                  <PriceText>
-                    {item.expectedPrice.toLocaleString("ko-KR")}원
-                  </PriceText>
+                  <PriceText>{item.changeQuantity}</PriceText>
                 </Td>
                 <Td>
-                  <PriceText>{item.changeQuantity}</PriceText>
+                  <StockManageButton>재고 관리</StockManageButton>
                 </Td>
               </Tr>
             ))}
