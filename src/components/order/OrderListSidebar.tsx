@@ -44,6 +44,24 @@ const SectionCount = styled.span`
 const OrderList = styled.div`
   overflow-y: auto;
   flex: 1;
+
+  /* 스크롤바 스타일 */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${theme.colors.border.primary};
+    border-radius: ${theme.borderRadius.sm};
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${theme.colors.text.muted};
+  }
 `;
 
 const OrderListItem = styled.div<{ active: boolean }>`
@@ -157,59 +175,53 @@ export default function OrderListSidebar({
 
   return (
     <Sidebar>
-      {/* 신규 주문 섹션 */}
-      <OrderSection>
+      <OrderList>
+        {/* 신규 주문 섹션 */}
         <SectionHeader>
           <CategorySectionTitle>신규</CategorySectionTitle>
           <SectionCount>{newOrders.length}건</SectionCount>
         </SectionHeader>
-        <OrderList>
-          {newOrders.map((order) => (
-            <OrderListItem
-              key={order.id}
-              active={selectedOrderId === order.id}
-              onClick={() => onSelectOrder(order.id)}
-            >
-              <OrderItemHeader>
-                <OrderItemId active={selectedOrderId === order.id}>
-                  {order.id}
-                </OrderItemId>
-                <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
-              </OrderItemHeader>
-              <OrderItemCount active={selectedOrderId === order.id}>
-                {order.items.length}개 메뉴
-              </OrderItemCount>
-            </OrderListItem>
-          ))}
-        </OrderList>
-      </OrderSection>
+        {newOrders.map((order) => (
+          <OrderListItem
+            key={order.id}
+            active={selectedOrderId === order.id}
+            onClick={() => onSelectOrder(order.id)}
+          >
+            <OrderItemHeader>
+              <OrderItemId active={selectedOrderId === order.id}>
+                {order.id}
+              </OrderItemId>
+              <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
+            </OrderItemHeader>
+            <OrderItemCount active={selectedOrderId === order.id}>
+              {order.items.length}개 메뉴
+            </OrderItemCount>
+          </OrderListItem>
+        ))}
 
-      {/* 진행중 주문 섹션 */}
-      <OrderSection>
+        {/* 진행중 주문 섹션 */}
         <SectionHeader>
           <CategorySectionTitle>진행</CategorySectionTitle>
           <SectionCount>{inProgressOrders.length}건</SectionCount>
         </SectionHeader>
-        <OrderList>
-          {inProgressOrders.map((order) => (
-            <OrderListItem
-              key={order.id}
-              active={selectedOrderId === order.id}
-              onClick={() => onSelectOrder(order.id)}
-            >
-              <OrderItemHeader>
-                <OrderItemId active={selectedOrderId === order.id}>
-                  {order.id}
-                </OrderItemId>
-                <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
-              </OrderItemHeader>
-              <OrderItemCount active={selectedOrderId === order.id}>
-                {order.items.length}개 메뉴
-              </OrderItemCount>
-            </OrderListItem>
-          ))}
-        </OrderList>
-      </OrderSection>
+        {inProgressOrders.map((order) => (
+          <OrderListItem
+            key={order.id}
+            active={selectedOrderId === order.id}
+            onClick={() => onSelectOrder(order.id)}
+          >
+            <OrderItemHeader>
+              <OrderItemId active={selectedOrderId === order.id}>
+                {order.id}
+              </OrderItemId>
+              <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
+            </OrderItemHeader>
+            <OrderItemCount active={selectedOrderId === order.id}>
+              {order.items.length}개 메뉴
+            </OrderItemCount>
+          </OrderListItem>
+        ))}
+      </OrderList>
     </Sidebar>
   );
 }
