@@ -97,11 +97,25 @@ const OrderItemId = styled.div<{ active: boolean }>`
   font-weight: ${theme.fontWeight.bold};
   color: ${({ active }) =>
     active ? theme.colors.background.secondary : theme.colors.text.primary};
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.xs};
 `;
 
-const OrderItemStatus = styled.div`
+const OrderIdLabel = styled.span<{ active: boolean }>`
+  font-size: ${theme.fontSize.sm};
+  font-weight: ${theme.fontWeight.normal};
+  color: ${({ active }) =>
+    active ? theme.colors.background.secondary : theme.colors.text.muted};
+`;
+
+const OrderItemStatus = styled.div<{ status?: string }>`
   display: inline-block;
-  background: ${theme.colors.status.completed};
+  background: ${({ status }) => {
+    if (status === "REJECTED") return theme.colors.status.danger;
+    if (status === "COMPLETED") return theme.colors.status.completed;
+    return theme.colors.status.completed;
+  }};
   color: ${theme.colors.text.white};
   padding: ${theme.spacing.xs} ${theme.spacing.sm};
   border-radius: ${theme.borderRadius.xs};
@@ -151,9 +165,12 @@ export default function OrderListSidebar({
               >
                 <OrderItemHeader>
                   <OrderItemId active={selectedOrderId === order.id}>
+                    <OrderIdLabel active={selectedOrderId === order.id}>
+                      ID
+                    </OrderIdLabel>
                     {order.id}
                   </OrderItemId>
-                  <OrderItemStatus>
+                  <OrderItemStatus status={order.status}>
                     {getStatusText(order.status)}
                   </OrderItemStatus>
                 </OrderItemHeader>
@@ -194,9 +211,14 @@ export default function OrderListSidebar({
           >
             <OrderItemHeader>
               <OrderItemId active={selectedOrderId === order.id}>
+                <OrderIdLabel active={selectedOrderId === order.id}>
+                  ID
+                </OrderIdLabel>
                 {order.id}
               </OrderItemId>
-              <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
+              <OrderItemStatus status={order.status}>
+                {getStatusText(order.status)}
+              </OrderItemStatus>
             </OrderItemHeader>
             <OrderItemCount active={selectedOrderId === order.id}>
               {order.orderItems.length}개 메뉴
@@ -217,9 +239,14 @@ export default function OrderListSidebar({
           >
             <OrderItemHeader>
               <OrderItemId active={selectedOrderId === order.id}>
+                <OrderIdLabel active={selectedOrderId === order.id}>
+                  ID
+                </OrderIdLabel>
                 {order.id}
               </OrderItemId>
-              <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
+              <OrderItemStatus status={order.status}>
+                {getStatusText(order.status)}
+              </OrderItemStatus>
             </OrderItemHeader>
             <OrderItemCount active={selectedOrderId === order.id}>
               {order.orderItems.length}개 메뉴

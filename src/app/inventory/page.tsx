@@ -11,12 +11,14 @@ import {
   type SaleStatusType,
 } from "@/config/inventoryTableConfig";
 import StockManageModal from "@/components/inventory/StockManageModal";
+import AddInventoryModal from "@/components/inventory/AddInventoryModal";
 import { InventoryStatus } from "@/types/api";
 import {
   getInventory,
   updateInventoryStatus,
   updateInventoryStock,
   deleteInventoryItem,
+  createInventoryItem,
 } from "@/lib/api/inventory";
 import {
   UIInventoryItem,
@@ -376,6 +378,7 @@ export default function InventoryPage() {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedItemForModal, setSelectedItemForModal] =
     useState<UIInventoryItem | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [inventory, setInventory] = useState<UIInventoryItem[]>([]);
   const [isSaleStatusDropdownOpen, setIsSaleStatusDropdownOpen] =
     useState(false);
@@ -467,6 +470,55 @@ export default function InventoryPage() {
     } catch (err) {
       console.error("Failed to update sale status:", err);
       alert("판매 상태 변경에 실패했습니다.");
+    }
+  };
+
+  // 상품 등록
+  const handleAddInventory = async (data: {
+    name: string;
+    stock: number;
+    price: number;
+    status: InventoryStatus;
+  }) => {
+    try {
+      const newItem = await createInventoryItem(data);
+      const uiItem = apiToUIInventory(newItem);
+      setInventory((prev) => [...prev, uiItem]);
+      alert("상품이 등록되었습니다.");
+    } catch (err) {
+      console.error("Failed to add inventory:", err);
+      throw err;
+    }
+  };
+
+  // 선택항목 삭제
+  const handleDeleteSelected = async () => {
+    if (selectedItems.length === 0) {
+      alert("삭제할 항목을 선택해주세요.");
+      return;
+    }
+
+    const confirmMessage = `선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`;
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      // 모든 선택된 항목 삭제
+      await Promise.all(
+        selectedItems.map((itemId) => deleteInventoryItem(itemId))
+      );
+
+      // UI 업데이트
+      setInventory((prev) =>
+        prev.filter((item) => !selectedItems.includes(item.id))
+      );
+
+      setSelectedItems([]);
+      alert("선택한 항목이 삭제되었습니다.");
+    } catch (err) {
+      console.error("Failed to delete items:", err);
+      alert("항목 삭제에 실패했습니다.");
     }
   };
 
@@ -669,8 +721,12 @@ export default function InventoryPage() {
               </SaleStatusOption>
             </SaleStatusDropdown>
           </SaleStatusDropdownWrapper>
-          <ActionButton>선택항목 삭제</ActionButton>
-          <PrimaryButton>+ 상품 등록</PrimaryButton>
+          <ActionButton onClick={handleDeleteSelected}>
+            선택항목 삭제
+          </ActionButton>
+          <PrimaryButton onClick={() => setIsAddModalOpen(true)}>
+            + 상품 등록
+          </PrimaryButton>
         </ActionButtons>
       </ActionBar>
 
@@ -705,6 +761,13 @@ export default function InventoryPage() {
           item={selectedItemForModal}
           onClose={handleCloseStockModal}
           onSave={handleSaveStock}
+        />
+      )}
+
+      {isAddModalOpen && (
+        <AddInventoryModal
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={handleAddInventory}
         />
       )}
     </Container>
