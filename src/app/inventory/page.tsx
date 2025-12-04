@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { mockInventory, type InventoryItem } from "@/data/inventory";
 import { ChevronDown } from "lucide-react";
 import {
   inventoryTableColumns,
@@ -12,6 +11,18 @@ import {
   type SaleStatusType,
 } from "@/config/inventoryTableConfig";
 import StockManageModal from "@/components/inventory/StockManageModal";
+import { InventoryStatus } from "@/types/api";
+import {
+  getInventory,
+  updateInventoryStatus,
+  updateInventoryStock,
+  deleteInventoryItem,
+} from "@/lib/api/inventory";
+import {
+  UIInventoryItem,
+  apiToUIInventory,
+  uiToApiStatus,
+} from "@/utils/inventoryAdapter";
 
 const Container = styled.div`
   padding: ${theme.spacing.xxxl};
@@ -364,10 +375,32 @@ export default function InventoryPage() {
   const [saleStatus, setSaleStatus] = useState<SaleStatusType>("전체");
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedItemForModal, setSelectedItemForModal] =
-    useState<InventoryItem | null>(null);
-  const [inventory, setInventory] = useState(mockInventory);
+    useState<UIInventoryItem | null>(null);
+  const [inventory, setInventory] = useState<UIInventoryItem[]>([]);
   const [isSaleStatusDropdownOpen, setIsSaleStatusDropdownOpen] =
     useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 재고 데이터 가져오기
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getInventory();
+        const uiData = data.map(apiToUIInventory);
+        setInventory(uiData);
+      } catch (err) {
+        console.error("Failed to fetch inventory:", err);
+        setError("재고 데이터를 불러오는데 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInventory();
+  }, []);
 
   // 데이터에서 고유한 카테고리 추출
   const uniqueCategories = [
@@ -376,7 +409,7 @@ export default function InventoryPage() {
   ];
 
   // 재고 관리 모달 열기
-  const handleOpenStockModal = (item: InventoryItem) => {
+  const handleOpenStockModal = (item: UIInventoryItem) => {
     setSelectedItemForModal(item);
   };
 
@@ -386,36 +419,59 @@ export default function InventoryPage() {
   };
 
   // 재고 저장
-  const handleSaveStock = (itemId: number, newQuantity: number) => {
-    setInventory((prev) =>
-      prev.map((item) =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item
-      )
-    );
+  const handleSaveStock = async (itemId: number, newQuantity: number) => {
+    try {
+      await updateInventoryStock(itemId, newQuantity);
+
+      // UI 업데이트
+      setInventory((prev) =>
+        prev.map((item) =>
+          item.id === itemId ? { ...item, quantity: newQuantity } : item
+        )
+      );
+
+      alert("재고가 업데이트되었습니다.");
+    } catch (err) {
+      console.error("Failed to update stock:", err);
+      alert("재고 업데이트에 실패했습니다.");
+    }
   };
 
   // 판매상태 변경
-  const handleChangeSaleStatus = (
-    newStatus: "판매중" | "판매중지"
-  ) => {
+  const handleChangeSaleStatus = async (newStatus: "판매중" | "판매중지") => {
     if (selectedItems.length === 0) {
       alert("변경할 항목을 선택해주세요.");
       return;
     }
 
-    setInventory((prev) =>
-      prev.map((item) =>
-        selectedItems.includes(item.id)
-          ? { ...item, saleStatus: newStatus }
-          : item
-      )
-    );
-    setIsSaleStatusDropdownOpen(false);
-    setSelectedItems([]);
+    try {
+      const apiStatus = uiToApiStatus(newStatus);
+
+      // 모든 선택된 항목의 상태 변경
+      await Promise.all(
+        selectedItems.map((itemId) => updateInventoryStatus(itemId, apiStatus))
+      );
+
+      // UI 업데이트
+      setInventory((prev) =>
+        prev.map((item) =>
+          selectedItems.includes(item.id)
+            ? { ...item, saleStatus: newStatus }
+            : item
+        )
+      );
+
+      setIsSaleStatusDropdownOpen(false);
+      setSelectedItems([]);
+      alert("판매 상태가 변경되었습니다.");
+    } catch (err) {
+      console.error("Failed to update sale status:", err);
+      alert("판매 상태 변경에 실패했습니다.");
+    }
   };
 
   // 테이블 셀 렌더링 함수
-  const renderCell = (columnId: string, item: InventoryItem) => {
+  const renderCell = (columnId: string, item: UIInventoryItem) => {
     switch (columnId) {
       case "select":
         return (
@@ -435,8 +491,6 @@ export default function InventoryPage() {
         return <PriceText>{item.quantity}</PriceText>;
       case "price":
         return <PriceText>{item.price.toLocaleString("ko-KR")}원</PriceText>;
-      case "changeQuantity":
-        return <PriceText>{item.changeQuantity}</PriceText>;
       case "manage":
         return (
           <StockManageButton onClick={() => handleOpenStockModal(item)}>
@@ -500,6 +554,30 @@ export default function InventoryPage() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isProductCategoryDropdownOpen, isSaleStatusDropdownOpen]);
+
+  if (loading) {
+    return (
+      <Container>
+        <HeaderSection>
+          <Title>재고 관리 시스템</Title>
+          <Subtitle>재고 데이터를 불러오는 중...</Subtitle>
+        </HeaderSection>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <HeaderSection>
+          <Title>재고 관리 시스템</Title>
+          <Subtitle style={{ color: theme.colors.status.danger }}>
+            {error}
+          </Subtitle>
+        </HeaderSection>
+      </Container>
+    );
+  }
 
   return (
     <Container>

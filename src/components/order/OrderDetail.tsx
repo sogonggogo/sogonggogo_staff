@@ -1,8 +1,16 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { Order, getStatusText } from "@/data/orders";
-import { formatPrice, dinnerMenus } from "@/data/menus";
+import { Order } from "@/types/api";
+import { getStatusText } from "@/utils/orderHelpers";
+import {
+  approveOrder,
+  rejectOrder,
+  startCooking,
+  markOrderReady,
+  startDelivery,
+  completeOrder,
+} from "@/lib/api/orders";
 
 const DetailContent = styled.div`
   flex: 1;
@@ -249,10 +257,21 @@ const EmptyState = styled.div`
 
 interface OrderDetailProps {
   order: Order | undefined;
+  onOrderUpdate: () => void;
 }
 
-export default function OrderDetail({ order }: OrderDetailProps) {
+// 가격 포맷 함수
+const formatPrice = (price: number): string => {
+  return `${price.toLocaleString("ko-KR")}원`;
+};
+
+export default function OrderDetail({
+  order,
+  onOrderUpdate,
+}: OrderDetailProps) {
   const [activeTab, setActiveTab] = useState<"order" | "delivery">("order");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!order) {
     return (
@@ -262,41 +281,134 @@ export default function OrderDetail({ order }: OrderDetailProps) {
     );
   }
 
+  // API 호출 핸들러
+  const handleAction = async (
+    action: () => Promise<void>,
+    successMessage: string
+  ) => {
+    try {
+      setLoading(true);
+      setError(null);
+      await action();
+      alert(successMessage);
+      onOrderUpdate(); // 주문 목록 갱신
+    } catch (err) {
+      console.error("Action failed:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "작업 처리에 실패했습니다.";
+      setError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 상태별 버튼 렌더링
   const renderActionButtons = () => {
+    if (loading) {
+      return (
+        <ActionButtons>
+          <ActionButton variant="primary" disabled>
+            처리중...
+          </ActionButton>
+        </ActionButtons>
+      );
+    }
+
     switch (order.status) {
-      case "pending":
+      case "PENDING":
         return (
           <ActionButtons>
-            <ActionButton variant="reject">거부</ActionButton>
-            <ActionButton variant="approve">승인</ActionButton>
+            <ActionButton
+              variant="reject"
+              onClick={() =>
+                handleAction(
+                  () => rejectOrder(order.id),
+                  "주문이 거절되었습니다."
+                )
+              }
+            >
+              거부
+            </ActionButton>
+            <ActionButton
+              variant="approve"
+              onClick={() =>
+                handleAction(
+                  () => approveOrder(order.id),
+                  "주문이 승인되었습니다."
+                )
+              }
+            >
+              승인
+            </ActionButton>
           </ActionButtons>
         );
-      case "waiting-cooking":
+      case "APPROVED":
         return (
           <ActionButtons>
-            <ActionButton variant="primary">조리 시작</ActionButton>
+            <ActionButton
+              variant="primary"
+              onClick={() =>
+                handleAction(
+                  () => startCooking(order.id),
+                  "조리를 시작했습니다."
+                )
+              }
+            >
+              조리 시작
+            </ActionButton>
           </ActionButtons>
         );
-      case "preparing":
+      case "COOKING":
         return (
           <ActionButtons>
-            <ActionButton variant="primary">조리 완료</ActionButton>
+            <ActionButton
+              variant="primary"
+              onClick={() =>
+                handleAction(
+                  () => markOrderReady(order.id),
+                  "조리가 완료되었습니다."
+                )
+              }
+            >
+              조리 완료
+            </ActionButton>
           </ActionButtons>
         );
-      case "ready-for-delivery":
+      case "READY_FOR_DELIVERY":
         return (
           <ActionButtons>
-            <ActionButton variant="primary">배달 시작</ActionButton>
+            <ActionButton
+              variant="primary"
+              onClick={() =>
+                handleAction(
+                  () => startDelivery(order.id),
+                  "배달을 시작했습니다."
+                )
+              }
+            >
+              배달 시작
+            </ActionButton>
           </ActionButtons>
         );
-      case "delivering":
+      case "IN_DELIVERY":
         return (
           <ActionButtons>
-            <ActionButton variant="primary">배달 완료</ActionButton>
+            <ActionButton
+              variant="primary"
+              onClick={() =>
+                handleAction(
+                  () => completeOrder(order.id),
+                  "배달이 완료되었습니다."
+                )
+              }
+            >
+              배달 완료
+            </ActionButton>
           </ActionButtons>
         );
-      case "delivered":
+      case "COMPLETED":
+      case "REJECTED":
         return null;
       default:
         return null;
@@ -333,45 +445,32 @@ export default function OrderDetail({ order }: OrderDetailProps) {
           <MenuSection>
             <MenuTitle>메뉴</MenuTitle>
             <MenuList>
-              {order.menuId ? (
-                <MenuGroup>
+              {order.orderItems.map((orderItem) => (
+                <MenuGroup key={orderItem.id}>
                   <MainMenuName>
-                    {dinnerMenus.find((m) => m.id === order.menuId)?.name ||
-                      "메뉴"}
+                    {orderItem.menuName} ({orderItem.style}) x{" "}
+                    {orderItem.quantity}
                   </MainMenuName>
                   <SubMenuList>
-                    {order.items.map((item, index) => (
+                    {orderItem.selectedItems.map((item, index) => (
                       <SubMenuItem key={index}>
                         <SubMenuName>
                           {item.name} {item.quantity}개
                         </SubMenuName>
                         <SubMenuDetails>
-                          {formatPrice(item.price)}
+                          {formatPrice(item.unitPrice)}
+                          {item.additionalPrice > 0 &&
+                            ` (+${formatPrice(item.additionalPrice)})`}
                         </SubMenuDetails>
                       </SubMenuItem>
                     ))}
                   </SubMenuList>
                 </MenuGroup>
-              ) : (
-                <MenuGroup>
-                  <SubMenuList>
-                    {order.items.map((item, index) => (
-                      <SubMenuItem key={index}>
-                        <SubMenuName>
-                          {item.name} {item.quantity}개
-                        </SubMenuName>
-                        <SubMenuDetails>
-                          {formatPrice(item.price)}
-                        </SubMenuDetails>
-                      </SubMenuItem>
-                    ))}
-                  </SubMenuList>
-                </MenuGroup>
-              )}
+              ))}
             </MenuList>
             <TotalSection>
               <TotalLabel>총 주문 금액</TotalLabel>
-              <TotalValue>{formatPrice(order.total)}</TotalValue>
+              <TotalValue>{formatPrice(order.pricing.total)}</TotalValue>
             </TotalSection>
           </MenuSection>
         )}
@@ -385,25 +484,62 @@ export default function OrderDetail({ order }: OrderDetailProps) {
               </DetailRow>
               <DetailRow>
                 <DetailLabel>주문 시간</DetailLabel>
-                <DetailValue>{order.time}</DetailValue>
+                <DetailValue>
+                  {new Date(order.metadata.orderDate).toLocaleString("ko-KR")}
+                </DetailValue>
+              </DetailRow>
+              <DetailRow>
+                <DetailLabel>배달 예정일</DetailLabel>
+                <DetailValue>{order.deliveryInfo.date}</DetailValue>
+              </DetailRow>
+              <DetailRow>
+                <DetailLabel>배달 예정 시간</DetailLabel>
+                <DetailValue>{order.deliveryInfo.time}</DetailValue>
               </DetailRow>
             </DetailSection>
 
             <DetailSection>
               <DetailRow>
                 <DetailLabel>고객명</DetailLabel>
-                <DetailValue>{order.customer}</DetailValue>
+                <DetailValue>{order.customer.name}</DetailValue>
+              </DetailRow>
+              <DetailRow>
+                <DetailLabel>이메일</DetailLabel>
+                <DetailValue>{order.customer.email}</DetailValue>
               </DetailRow>
               <DetailRow>
                 <DetailLabel>전화 번호</DetailLabel>
-                <DetailValue>{order.phone}</DetailValue>
+                <DetailValue>{order.customer.phone}</DetailValue>
+              </DetailRow>
+              <DetailRow>
+                <DetailLabel>단골 고객</DetailLabel>
+                <DetailValue>
+                  {order.customer.isRegularCustomer ? "예" : "아니오"}
+                </DetailValue>
               </DetailRow>
             </DetailSection>
 
             <DetailSection>
               <DetailRow>
                 <DetailLabel>배달 주소</DetailLabel>
-                <DetailValue>{order.address}</DetailValue>
+                <DetailValue>{order.deliveryInfo.address}</DetailValue>
+              </DetailRow>
+            </DetailSection>
+
+            <DetailSection>
+              <DetailRow>
+                <DetailLabel>소계</DetailLabel>
+                <DetailValue>{formatPrice(order.pricing.subtotal)}</DetailValue>
+              </DetailRow>
+              <DetailRow>
+                <DetailLabel>할인</DetailLabel>
+                <DetailValue>
+                  -{formatPrice(order.pricing.discount)}
+                </DetailValue>
+              </DetailRow>
+              <DetailRow>
+                <DetailLabel>최종 금액</DetailLabel>
+                <DetailValue>{formatPrice(order.pricing.total)}</DetailValue>
               </DetailRow>
             </DetailSection>
           </>

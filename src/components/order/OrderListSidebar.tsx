@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { Order, getStatusText } from "@/data/orders";
+import { Order } from "@/types/api";
+import { getStatusText } from "@/utils/orderHelpers";
 
 const Sidebar = styled.aside`
   width: 320px;
@@ -119,8 +120,8 @@ const OrderItemCount = styled.div<{ active: boolean }>`
 
 interface OrderListSidebarProps {
   orders: Order[];
-  selectedOrderId: string | null;
-  onSelectOrder: (orderId: string) => void;
+  selectedOrderId: number | null;
+  onSelectOrder: (orderId: number) => void;
   showCategories?: boolean;
   categoryTitle?: string;
 }
@@ -157,7 +158,7 @@ export default function OrderListSidebar({
                   </OrderItemStatus>
                 </OrderItemHeader>
                 <OrderItemCount active={selectedOrderId === order.id}>
-                  {order.items.length}개 메뉴
+                  {order.orderItems.length}개 메뉴
                 </OrderItemCount>
               </OrderListItem>
             ))}
@@ -168,13 +169,13 @@ export default function OrderListSidebar({
   }
 
   // 처리중 페이지: 신규/진행 카테고리 표시
-  const newOrders = orders.filter((order) => order.status === "pending");
+  const newOrders = orders.filter((order) => order.status === "PENDING");
   const inProgressOrders = orders.filter(
     (order) => 
-      order.status === "waiting-cooking" || 
-      order.status === "preparing" || 
-      order.status === "ready-for-delivery" || 
-      order.status === "delivering"
+      order.status === "APPROVED" || 
+      order.status === "COOKING" || 
+      order.status === "READY_FOR_DELIVERY" || 
+      order.status === "IN_DELIVERY"
   );
 
   return (
@@ -198,7 +199,7 @@ export default function OrderListSidebar({
               <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
             </OrderItemHeader>
             <OrderItemCount active={selectedOrderId === order.id}>
-              {order.items.length}개 메뉴
+              {order.orderItems.length}개 메뉴
             </OrderItemCount>
           </OrderListItem>
         ))}
@@ -221,7 +222,7 @@ export default function OrderListSidebar({
               <OrderItemStatus>{getStatusText(order.status)}</OrderItemStatus>
             </OrderItemHeader>
             <OrderItemCount active={selectedOrderId === order.id}>
-              {order.items.length}개 메뉴
+              {order.orderItems.length}개 메뉴
             </OrderItemCount>
           </OrderListItem>
         ))}

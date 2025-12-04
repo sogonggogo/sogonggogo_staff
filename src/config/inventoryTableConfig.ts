@@ -45,12 +45,6 @@ export const inventoryTableColumns: TableColumn[] = [
     sortable: false,
   },
   {
-    id: "changeQuantity",
-    label: "증감수량",
-    width: "100px",
-    sortable: false,
-  },
-  {
     id: "manage",
     label: "재고 관리",
     width: "120px",
