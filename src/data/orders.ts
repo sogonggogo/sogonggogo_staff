@@ -4,7 +4,7 @@ export interface OrderItem {
   price: number;
 }
 
-export type OrderStatus = 'pending' | 'preparing' | 'delivering' | 'delivered';
+export type OrderStatus = 'pending' | 'waiting-cooking' | 'preparing' | 'ready-for-delivery' | 'delivering' | 'delivered';
 
 export interface Order {
   id: string;
@@ -82,8 +82,12 @@ export const getStatusText = (status: OrderStatus): string => {
   switch (status) {
     case 'pending':
       return '승인 대기중';
+    case 'waiting-cooking':
+      return '조리 대기중';
     case 'preparing':
       return '조리중';
+    case 'ready-for-delivery':
+      return '배달 준비중';
     case 'delivering':
       return '배달중';
     case 'delivered':
@@ -109,10 +113,10 @@ export const mockOrders: Order[] = [
     ],
     total: 89000,
   },
-  // 프렌치 디너 (샐러드 제거)
+  // 프렌치 디너 (샐러드 제거) - 조리 대기중
   {
     id: 'ORD-002',
-    status: 'preparing',
+    status: 'waiting-cooking',
     customer: '이영희',
     phone: '010-2345-6789',
     address: '서울시 서초구 서초동 456-78',
@@ -125,10 +129,10 @@ export const mockOrders: Order[] = [
     ],
     total: 75000, // 15000 + 25000 + 35000
   },
-  // 잉글리시 디너 (기본 아이템 + 추가 아이템)
+  // 잉글리시 디너 (기본 아이템 + 추가 아이템) - 배달 준비중
   {
     id: 'ORD-003',
-    status: 'delivering',
+    status: 'ready-for-delivery',
     customer: '박민수',
     phone: '010-3456-7890',
     address: '서울시 송파구 잠실동 789-12',
@@ -175,7 +179,7 @@ export const mockOrders: Order[] = [
     ],
     total: 60000, // 25000 + 35000
   },
-  // 새로운 주문 2: 프렌치 디너 (기본 아이템 모두 포함)
+  // 새로운 주문 2: 프렌치 디너 (기본 아이템 모두 포함) - 조리중
   {
     id: 'ORD-006',
     status: 'preparing',
@@ -192,7 +196,7 @@ export const mockOrders: Order[] = [
     ],
     total: 90000, // 15000 + 25000 + 15000 + 35000
   },
-  // 새로운 주문 3: 잉글리시 디너 (베이컨 제거, 에그 스크램블 추가)
+  // 새로운 주문 3: 잉글리시 디너 (베이컨 제거, 에그 스크램블 추가) - 배달중
   {
     id: 'ORD-007',
     status: 'delivering',
@@ -225,10 +229,10 @@ export const mockOrders: Order[] = [
     ],
     total: 91000, // 25000 + 16000 + 15000 + 35000
   },
-  // 새로운 주문 5: 발렌타인 디너 (큐피드 장식만 제거, 하트 장식 추가 수량)
+  // 새로운 주문 5: 발렌타인 디너 (큐피드 장식만 제거, 하트 장식 추가 수량) - 조리 대기중
   {
     id: 'ORD-009',
-    status: 'preparing',
+    status: 'waiting-cooking',
     customer: '강태현',
     phone: '010-9012-3456',
     address: '서울시 노원구 상계동 789-01',
@@ -240,5 +244,55 @@ export const mockOrders: Order[] = [
       { name: '하트 장식', quantity: 2, price: getItemPrice(1, '하트 장식') }, // 14500 * 2 = 29000
     ],
     total: 89000, // 25000 + 35000 + 29000
+  },
+  // 새로운 주문 6: 샴페인 축제 디너 - 조리중
+  {
+    id: 'ORD-010',
+    status: 'preparing',
+    customer: '오수빈',
+    phone: '010-1111-2222',
+    address: '서울시 영등포구 여의도동 111-22',
+    time: '20:15',
+    menuId: 4, // 샴페인 축제 디너
+    items: [
+      { name: '샴페인', quantity: 2, price: getItemPrice(4, '샴페인') }, // 25000 * 2 = 50000
+      { name: '바게트 빵', quantity: 2, price: getItemPrice(4, '바게트 빵') }, // 4000 * 2 = 8000
+      { name: '커피', quantity: 1, price: getItemPrice(4, '커피') }, // 15000
+      { name: '스테이크', quantity: 2, price: getItemPrice(4, '스테이크') }, // 35000 * 2 = 70000
+    ],
+    total: 143000, // 50000 + 8000 + 15000 + 70000
+  },
+  // 새로운 주문 7: 프렌치 디너 - 배달 준비중
+  {
+    id: 'ORD-011',
+    status: 'ready-for-delivery',
+    customer: '임현우',
+    phone: '010-3333-4444',
+    address: '서울시 성동구 성수동 333-44',
+    time: '20:30',
+    menuId: 2, // 프렌치 디너
+    items: [
+      { name: '와인', quantity: 2, price: getItemPrice(2, '와인') }, // 25000 * 2 = 50000
+      { name: '샐러드', quantity: 2, price: getItemPrice(2, '샐러드') }, // 15000 * 2 = 30000
+      { name: '스테이크', quantity: 1, price: getItemPrice(2, '스테이크') }, // 35000
+    ],
+    total: 115000, // 50000 + 30000 + 35000
+  },
+  // 새로운 주문 8: 잉글리시 디너 - 배달중
+  {
+    id: 'ORD-012',
+    status: 'delivering',
+    customer: '최하늘',
+    phone: '010-5555-6666',
+    address: '서울시 광진구 광장동 555-66',
+    time: '20:45',
+    menuId: 3, // 잉글리시 디너
+    items: [
+      { name: '에그 스크램블', quantity: 1, price: getItemPrice(3, '에그 스크램블') }, // 7000
+      { name: '베이컨', quantity: 2, price: getItemPrice(3, '베이컨') }, // 8000 * 2 = 16000
+      { name: '빵', quantity: 1, price: getItemPrice(3, '빵') }, // 5000
+      { name: '스테이크', quantity: 1, price: getItemPrice(3, '스테이크') }, // 35000
+    ],
+    total: 63000, // 7000 + 16000 + 5000 + 35000
   },
 ];

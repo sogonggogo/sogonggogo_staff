@@ -69,7 +69,7 @@ const ActionButtons = styled.div`
   align-items: center;
 `;
 
-const ActionButton = styled.button<{ variant: "approve" | "reject" }>`
+const ActionButton = styled.button<{ variant: "approve" | "reject" | "primary" }>`
   font-family: ${theme.fontFamily.nanumGothic};
   font-size: ${theme.fontSize.base};
   font-weight: ${theme.fontWeight.bold};
@@ -79,28 +79,30 @@ const ActionButton = styled.button<{ variant: "approve" | "reject" }>`
   cursor: pointer;
   transition: ${theme.transition.all};
 
-  ${({ variant }) =>
-    variant === "approve"
-      ? `
-    background: ${theme.colors.brand.blue};
-    color: ${theme.colors.text.white};
-    
-    &:hover {
-      background: ${theme.colors.brand.blue};
-      opacity: 0.9;
-      box-shadow: ${theme.shadow.sm};
+  ${({ variant }) => {
+    if (variant === "approve" || variant === "primary") {
+      return `
+        background: ${theme.colors.brand.blue};
+        color: ${theme.colors.text.white};
+        
+        &:hover {
+          background: ${theme.colors.brand.blue};
+          opacity: 0.9;
+          box-shadow: ${theme.shadow.sm};
+        }
+      `;
     }
-  `
-      : `
-    background: ${theme.colors.background.darkest};
-    color: ${theme.colors.text.light};
-    border: 1px solid ${theme.colors.border.darker};
-    
-    &:hover {
-      background: ${theme.colors.background.dark};
-      border-color: ${theme.colors.border.dark};
-    }
-  `}
+    return `
+      background: ${theme.colors.background.darkest};
+      color: ${theme.colors.text.light};
+      border: 1px solid ${theme.colors.border.darker};
+      
+      &:hover {
+        background: ${theme.colors.background.dark};
+        border-color: ${theme.colors.border.dark};
+      }
+    `;
+  }}
 `;
 
 const DetailTitle = styled.h1`
@@ -260,6 +262,47 @@ export default function OrderDetail({ order }: OrderDetailProps) {
     );
   }
 
+  // 상태별 버튼 렌더링
+  const renderActionButtons = () => {
+    switch (order.status) {
+      case "pending":
+        return (
+          <ActionButtons>
+            <ActionButton variant="reject">거부</ActionButton>
+            <ActionButton variant="approve">승인</ActionButton>
+          </ActionButtons>
+        );
+      case "waiting-cooking":
+        return (
+          <ActionButtons>
+            <ActionButton variant="primary">조리 시작</ActionButton>
+          </ActionButtons>
+        );
+      case "preparing":
+        return (
+          <ActionButtons>
+            <ActionButton variant="primary">조리 완료</ActionButton>
+          </ActionButtons>
+        );
+      case "ready-for-delivery":
+        return (
+          <ActionButtons>
+            <ActionButton variant="primary">배달 시작</ActionButton>
+          </ActionButtons>
+        );
+      case "delivering":
+        return (
+          <ActionButtons>
+            <ActionButton variant="primary">배달 완료</ActionButton>
+          </ActionButtons>
+        );
+      case "delivered":
+        return null;
+      default:
+        return null;
+    }
+  };
+
   return (
     <DetailContent>
       <DetailCard>
@@ -268,12 +311,7 @@ export default function OrderDetail({ order }: OrderDetailProps) {
             <DetailTitle>{order.id}</DetailTitle>
             <DetailStatus>{getStatusText(order.status)}</DetailStatus>
           </HeaderInfo>
-          {order.status !== "delivered" && (
-            <ActionButtons>
-              <ActionButton variant="reject">거부</ActionButton>
-              <ActionButton variant="approve">승인</ActionButton>
-            </ActionButtons>
-          )}
+          {renderActionButtons()}
         </DetailHeader>
 
         <TabContainer>

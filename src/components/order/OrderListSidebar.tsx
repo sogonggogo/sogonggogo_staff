@@ -170,7 +170,11 @@ export default function OrderListSidebar({
   // 처리중 페이지: 신규/진행 카테고리 표시
   const newOrders = orders.filter((order) => order.status === "pending");
   const inProgressOrders = orders.filter(
-    (order) => order.status === "preparing" || order.status === "delivering"
+    (order) => 
+      order.status === "waiting-cooking" || 
+      order.status === "preparing" || 
+      order.status === "ready-for-delivery" || 
+      order.status === "delivering"
   );
 
   return (
