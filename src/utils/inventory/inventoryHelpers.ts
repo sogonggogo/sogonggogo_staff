@@ -1,4 +1,4 @@
-import { InventoryItem } from "@/data/inventory";
+import { InventoryItem } from "@/types/inventory";
 
 /**
  * 재고 레벨별 통계 계산

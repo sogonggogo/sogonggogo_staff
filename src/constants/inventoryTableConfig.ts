@@ -1,4 +1,4 @@
-import { InventoryItem } from "@/data/inventory";
+import { InventoryItem } from "@/types/inventory";
 
 export interface TableColumn {
   id: string;
@@ -53,7 +53,7 @@ export const inventoryTableColumns: TableColumn[] = [
 ];
 
 export const saleStatusOptions = ["전체", "판매중", "판매중지"] as const;
-export type SaleStatusType = typeof saleStatusOptions[number];
+export type SaleStatusType = (typeof saleStatusOptions)[number];
 
 export const pageSizeOptions = [20, 50, 100] as const;
-export type PageSizeType = typeof pageSizeOptions[number];
+export type PageSizeType = (typeof pageSizeOptions)[number];

@@ -9,7 +9,7 @@ import {
   saleStatusOptions,
   pageSizeOptions,
   type SaleStatusType,
-} from "@/config/inventoryTableConfig";
+} from "@/constants/inventoryTableConfig";
 import StockManageModal from "@/components/inventory/StockManageModal";
 import AddInventoryModal from "@/components/inventory/AddInventoryModal";
 import { InventoryStatus } from "@/types/api";
@@ -19,12 +19,12 @@ import {
   updateInventoryStock,
   deleteInventoryItem,
   createInventoryItem,
-} from "@/lib/api/inventory";
+} from "@/services/inventory";
 import {
   UIInventoryItem,
   apiToUIInventory,
   uiToApiStatus,
-} from "@/utils/inventoryAdapter";
+} from "@/utils/inventory/inventoryAdapter";
 
 const Container = styled.div`
   padding: ${theme.spacing.xxxl};

@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
 import { Order } from "@/types/api";
-import { getStatusText } from "@/utils/orderHelpers";
+import { getStatusText } from "@/utils/order/orderHelpers";
 import {
   approveOrder,
   rejectOrder,
@@ -10,8 +10,8 @@ import {
   markOrderReady,
   startDelivery,
   completeOrder,
-} from "@/lib/api/orders";
-import { ApiError } from "@/lib/api/client";
+} from "@/services/orders";
+import { ApiError } from "@/services/client";
 
 const DetailContent = styled.div`
   flex: 1;

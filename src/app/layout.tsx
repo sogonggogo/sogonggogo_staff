@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import AppLayout from "@/components/layout/AppLayout";
+import AppLayout from "@/components/common/AppLayout";
 
 export const metadata: Metadata = {
   title: "미스터 대박 Staff",

@@ -7,8 +7,8 @@ import { useSearchParams } from "next/navigation";
 import OrderListSidebar from "@/components/order/OrderListSidebar";
 import OrderDetail from "@/components/order/OrderDetail";
 import { Order } from "@/types/api";
-import { getOrders } from "@/lib/api/orders";
-import { isCompletedStatus } from "@/utils/orderHelpers";
+import { getOrders } from "@/services/orders";
+import { isCompletedStatus } from "@/utils/order/orderHelpers";
 
 const Container = styled.div`
   display: flex;

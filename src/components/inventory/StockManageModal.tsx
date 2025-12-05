@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { UIInventoryItem } from "@/utils/inventoryAdapter";
+import { UIInventoryItem } from "@/utils/inventory/inventoryAdapter";
 import { X } from "lucide-react";
 
 const ModalOverlay = styled.div`

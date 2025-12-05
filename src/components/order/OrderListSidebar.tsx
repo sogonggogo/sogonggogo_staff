@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
 import { Order } from "@/types/api";
-import { getStatusText } from "@/utils/orderHelpers";
+import { getStatusText } from "@/utils/order/orderHelpers";
 
 const Sidebar = styled.aside`
   width: 320px;
