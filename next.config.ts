@@ -23,5 +23,8 @@ const nextConfig: NextConfig = {
     ];
   },
 };
+module.exports = {
+  basePath: "/staff",
+};
 
 export default nextConfig;
