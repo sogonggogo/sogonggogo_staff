@@ -368,6 +368,9 @@ const PriceText = styled.span`
   font-weight: ${theme.fontWeight.medium};
 `;
 
+// Dynamic export를 사용하여 SSR 비활성화
+export const dynamic = "force-dynamic";
+
 export default function InventoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isProductCategoryDropdownOpen, setIsProductCategoryDropdownOpen] =

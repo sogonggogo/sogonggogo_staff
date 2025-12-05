@@ -11,6 +11,7 @@ import {
   startDelivery,
   completeOrder,
 } from "@/lib/api/orders";
+import { ApiError } from "@/lib/api/client";
 
 const DetailContent = styled.div`
   flex: 1;
@@ -294,8 +295,26 @@ export default function OrderDetail({
       onOrderUpdate(); // 주문 목록 갱신
     } catch (err) {
       console.error("Action failed:", err);
-      const errorMessage =
-        err instanceof Error ? err.message : "작업 처리에 실패했습니다.";
+      
+      let errorMessage = "작업 처리에 실패했습니다.";
+      
+      if (err instanceof ApiError) {
+        // API 에러인 경우 상세 메시지 표시
+        if (err.data && typeof err.data === "object") {
+          const data = err.data as { message?: string; error?: string };
+          errorMessage = data.message || data.error || errorMessage;
+        } else {
+          errorMessage = `${err.status} 에러: ${err.statusText}`;
+        }
+        
+        // 400 에러 (재고 부족 등)에 대한 추가 설명
+        if (err.status === 400) {
+          errorMessage += "\n\n재고가 부족하거나 판매 중지된 항목이 있을 수 있습니다.";
+        }
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
       alert(errorMessage);
     } finally {

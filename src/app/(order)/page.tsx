@@ -146,6 +146,9 @@ const ErrorMessage = styled.div`
   font-size: ${theme.fontSize.lg};
 `;
 
+// Dynamic export를 사용하여 SSR 비활성화
+export const dynamic = 'force-dynamic';
+
 export default function OrdersPage() {
   return (
     <Suspense fallback={<LoadingFallback>Loading...</LoadingFallback>}>

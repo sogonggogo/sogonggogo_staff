@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import styled from "@emotion/styled";
 import { Package, ClipboardList, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
@@ -74,7 +75,7 @@ const NavText = styled.span`
   line-height: 1.3;
 `;
 
-export default function Sidebar() {
+function SidebarContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab");
@@ -99,5 +100,35 @@ export default function Sidebar() {
         <NavText>재고 관리</NavText>
       </NavButton>
     </SidebarContainer>
+  );
+}
+
+const SidebarFallback = styled(SidebarContainer)`
+  /* Fallback 스타일 */
+`;
+
+export default function Sidebar() {
+  return (
+    <Suspense
+      fallback={
+        <SidebarFallback>
+          <Logo>MR.DAEBAK</Logo>
+          <NavButton href="/?tab=processing" isActive={false}>
+            <ClipboardList size={24} strokeWidth={2} />
+            <NavText>처리중</NavText>
+          </NavButton>
+          <NavButton href="/?tab=completed" isActive={false}>
+            <ClipboardCheck size={24} strokeWidth={2} />
+            <NavText>완료</NavText>
+          </NavButton>
+          <NavButton href="/inventory" isActive={false}>
+            <Package size={24} strokeWidth={2} />
+            <NavText>재고 관리</NavText>
+          </NavButton>
+        </SidebarFallback>
+      }
+    >
+      <SidebarContent />
+    </Suspense>
   );
 }
