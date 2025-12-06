@@ -31,6 +31,14 @@ async function fetchApi<T>(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
+      // 404 에러의 경우 더 자세한 정보 로깅
+      if (response.status === 404) {
+        console.error(`404 Not Found: ${options?.method || 'GET'} ${url}`, {
+          endpoint,
+          method: options?.method || 'GET',
+          errorData,
+        });
+      }
       throw new ApiError(response.status, response.statusText, errorData);
     }
 
