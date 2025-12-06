@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_API_URL = 'http://uoscholar-server.store/sogong-api';
+const BACKEND_API_URL = "http://uoscholar-server.store/sogong-api";
+
+// API Route 핸들러가 호출되는지 확인
+export const dynamic = "force-dynamic";
 
 export async function DELETE(
   request: NextRequest,
@@ -8,22 +11,51 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // API 명세서에 따라: DELETE /api/staff/inventory/{id}
     const backendUrl = `${BACKEND_API_URL}/api/staff/inventory/${id}`;
 
+    // 요청 정보 로깅
+    const requestUrl = request.url;
+    console.log(`[DELETE] API Route handler called`, {
+      requestUrl,
+      id,
+      backendUrl,
+      method: request.method,
+    });
+
     const response = await fetch(backendUrl, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
+    console.log(`[DELETE] Backend response status: ${response.status}`);
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({
-        message: response.statusText,
-      }));
-      
+      const errorText = await response.text();
+      let errorData;
+
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: response.statusText || "Failed to delete item" };
+      }
+
+      console.error(`[DELETE] Backend error:`, {
+        status: response.status,
+        statusText: response.statusText,
+        errorData,
+        url: backendUrl,
+      });
+
       return NextResponse.json(
-        { error: errorData.message || 'Failed to delete item' },
+        {
+          error:
+            errorData.message || `Failed to delete item (${response.status})`,
+          status: response.status,
+        },
         { status: response.status }
       );
     }
@@ -33,14 +65,23 @@ export async function DELETE(
       return new NextResponse(null, { status: 204 });
     }
 
-    const data = await response.json().catch(() => ({}));
-    return NextResponse.json(data, { status: response.status });
+    // 응답 본문이 있는 경우
+    const contentType = response.headers.get("content-type");
+    if (contentType?.includes("application/json")) {
+      const data = await response.json().catch(() => ({}));
+      return NextResponse.json(data, { status: response.status });
+    }
+
+    // JSON이 아닌 경우 빈 응답
+    return new NextResponse(null, { status: response.status });
   } catch (error) {
-    console.error('Error proxying DELETE request:', error);
+    console.error("[DELETE] Error proxying request:", error);
+
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: error instanceof Error ? error.message : "Internal server error",
+      },
       { status: 500 }
     );
   }
 }
-

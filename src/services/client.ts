@@ -20,6 +20,15 @@ async function fetchApi<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  // DELETE 요청의 경우 상세 로깅
+  if (options?.method === "DELETE") {
+    console.log(`[Client] DELETE request to: ${url}`, {
+      endpoint,
+      fullUrl: url,
+      method: options.method,
+    });
+  }
+
   try {
     const response = await fetch(url, {
       ...options,

@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
+      // DELETE 메서드는 API Route 핸들러가 처리하므로 제외
+      // 나머지 요청만 백엔드로 프록시
       {
         source: "/api/:path*",
         destination: "http://uoscholar-server.store/sogong-api/api/:path*",

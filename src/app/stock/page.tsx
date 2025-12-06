@@ -562,9 +562,7 @@ export default function StockPage() {
 
     try {
       // 모든 선택된 항목 삭제
-      await Promise.all(
-        selectedItems.map((itemId) => deleteStockItem(itemId))
-      );
+      await Promise.all(selectedItems.map((itemId) => deleteStockItem(itemId)));
 
       // UI 업데이트
       setStock((prev) =>
@@ -576,7 +574,7 @@ export default function StockPage() {
     } catch (err: unknown) {
       console.error("Failed to delete items:", err);
       let errorMessage = "항목 삭제에 실패했습니다.";
-      
+
       if (err instanceof Error) {
         // ApiError인 경우 더 자세한 메시지 표시
         if (err.name === "ApiError" && "status" in err) {
@@ -584,7 +582,8 @@ export default function StockPage() {
           if (status === 404) {
             errorMessage = "삭제할 항목을 찾을 수 없습니다. (404)";
           } else if (status === 500) {
-            errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요. (500)";
+            errorMessage =
+              "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요. (500)";
           } else {
             errorMessage = `삭제 실패: ${err.message}`;
           }
@@ -592,7 +591,7 @@ export default function StockPage() {
           errorMessage = `삭제 실패: ${err.message}`;
         }
       }
-      
+
       alert(errorMessage);
     }
   };
