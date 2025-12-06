@@ -20,7 +20,8 @@ graph TB
     end
 
     subgraph "src/types"
-        Types["types/"]
+        ApiTypes["api.ts"]
+        StockTypes["stock.ts"]
     end
 
     subgraph "src/utils"
@@ -28,50 +29,42 @@ graph TB
         UtilsOrder["utils/order/"]
     end
 
-    subgraph "src/constants"
-        Constants["constants/"]
-    end
-
     subgraph "src/styles"
         Styles["styles/"]
     end
 
-    %% app → components
-    AppOrder -->|"Order"| ComponentsOrder
-    AppStock -->|"UIStockItem, StockStatus"| ComponentsStock
+    %% app → components (인터페이스: props로 전달하는 타입)
+    AppOrder -->|"Order (api.ts)"| ComponentsOrder
+    AppStock -->|"UIStockItem (stock.ts)"| ComponentsStock
 
-    %% app → services
-    AppOrder -->|"Order"| Services
-    AppStock -->|"StockItem, StockStatus"| Services
+    %% app → services (인터페이스: API 호출 시 사용하는 타입)
+    AppOrder -->|"Order (api.ts)"| Services
+    AppStock -->|"StockStatus (api.ts)"| Services
 
-    %% app → utils
-    AppOrder -->|"OrderStatus"| UtilsOrder
-    AppStock -->|"StockItem → UIStockItem"| UtilsStock
-    AppStock -->|"TableColumn"| Constants
+    %% app → utils (인터페이스: 유틸 함수 사용 시 타입)
+    AppOrder -->|"OrderStatus (api.ts)"| UtilsOrder
+    AppStock -->|"StockItem (api.ts)"| UtilsStock
 
-    %% components → services
-    ComponentsOrder -->|"Order, CreateStockRequest,<br/>UpdateStockRequest"| Services
-    ComponentsStock -->|"StockItem, StockStatus,<br/>CreateStockRequest,<br/>UpdateStockRequest"| Services
+    %% components → services (인터페이스: API 호출 시 사용하는 타입)
+    ComponentsOrder -->|"Order (api.ts)"| Services
+    ComponentsStock -->|"CreateStockRequest, UpdateStockRequest (api.ts)"| Services
 
-    %% components → utils
-    ComponentsOrder -->|"Order, OrderStatus"| UtilsOrder
-    ComponentsStock -->|"StockItem → UIStockItem"| UtilsStock
-    ComponentsStock -->|"TableColumn"| Constants
+    %% components → utils (인터페이스: 유틸 함수 사용 시 타입)
+    ComponentsOrder -->|"Order, OrderStatus (api.ts)"| UtilsOrder
+    ComponentsStock -->|"StockItem (api.ts), UIStockItem (stock.ts)"| UtilsStock
 
     %% components → styles
     ComponentsCommon --> Styles
     ComponentsOrder --> Styles
     ComponentsStock --> Styles
 
-    %% services → types
-    Services -->|"Order, OrderStatus, StockItem,<br/>StockStatus, CreateStockRequest,<br/>UpdateStockStatusRequest,<br/>UpdateStockRequest"| Types
+    %% services → types (인터페이스: 타입 정의 참조)
+    Services -->|"StockItem, StockStatus, CreateStockRequest, UpdateStockRequest (api.ts)"| ApiTypes
 
-    %% utils → types
-    UtilsStock -->|"StockItem (API),<br/>StockItem (UI), UIStockItem"| Types
-    UtilsOrder -->|"Order, OrderStatus"| Types
-
-    %% constants → types
-    Constants -->|"StockItem (UI)"| Types
+    %% utils → types (인터페이스: 타입 정의 참조)
+    UtilsStock -->|"StockItem (api.ts), StockItem (stock.ts)"| ApiTypes
+    UtilsStock -->|"StockItem (stock.ts)"| StockTypes
+    UtilsOrder -->|"OrderStatus (api.ts)"| ApiTypes
 
     %% app → styles
     AppOrder --> Styles
@@ -83,10 +76,10 @@ graph TB
     style ComponentsStock fill:#e1f5ff
     style ComponentsOrder fill:#e1f5ff
     style Services fill:#fff4e1
-    style Types fill:#ffe1f5
+    style ApiTypes fill:#ffe1f5
+    style StockTypes fill:#ffe1f5
     style UtilsStock fill:#fff9e1
     style UtilsOrder fill:#fff9e1
-    style Constants fill:#f0f0f0
     style Styles fill:#e1ffe1
 ```
 
@@ -94,31 +87,28 @@ graph TB
 
 ### src/app/
 
-- `app/(order)/` → `Order` (types/api.ts), `components/order/`, `services/`, `utils/order/`
-- `app/stock/` → `StockStatus`, `UIStockItem` (utils/stock/stockAdapter.ts), `components/stock/`, `services/`, `utils/stock/`, `constants/`
+- `app/(order)/` → `api.ts`, `components/order/`, `services/`, `utils/order/`
+- `app/stock/` → `api.ts`, `components/stock/`, `services/`, `utils/stock/`
 
 ### src/components/
 
 - `components/common/` → `styles/`
-- `components/stock/` → `StockItem`, `StockStatus`, `UIStockItem`, `CreateStockRequest`, `UpdateStockRequest` (types/), `services/`, `utils/stock/`, `constants/`, `styles/`
-- `components/order/` → `Order`, `OrderStatus` (types/api.ts), `services/`, `utils/order/`, `styles/`
+- `components/stock/` → `api.ts`, `stock.ts`, `services/`, `utils/stock/`, `styles/`
+- `components/order/` → `api.ts`, `services/`, `utils/order/`, `styles/`
 
 ### src/services/
 
-- `services/` → `Order`, `OrderStatus`, `StockItem`, `StockStatus`, `CreateStockRequest`, `UpdateStockStatusRequest`, `UpdateStockRequest` (types/api.ts), `client.ts`
+- `services/` → `api.ts`, `client.ts`
 
 ### src/types/
 
-- `types/` → `Order`, `OrderStatus`, `OrderItem`, `Customer`, `DeliveryInfo`, `Pricing`, `Metadata`, `SelectedItem`, `StockItem` (API), `StockStatus`, `CreateStockRequest`, `UpdateStockStatusRequest`, `UpdateStockRequest`, `StockItem` (UI)
+- `api.ts` → API 응답/요청 타입 정의 (Order, OrderStatus, StockItem, StockStatus, CreateStockRequest, UpdateStockStatusRequest, UpdateStockRequest 등)
+- `stock.ts` → UI용 재고 타입 정의 (StockItem UI)
 
 ### src/utils/
 
-- `utils/stock/` → `StockItem` (API, types/api.ts), `StockItem` (UI, types/stock.ts), `UIStockItem` (자체 정의)
-- `utils/order/` → `Order`, `OrderStatus` (types/api.ts)
-
-### src/constants/
-
-- `constants/` → `StockItem` (UI, types/stock.ts), `TableColumn`
+- `utils/stock/` → `api.ts`, `stock.ts`
+- `utils/order/` → `api.ts`
 
 ### src/styles/
 
