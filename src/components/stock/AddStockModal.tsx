@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
 import { X } from "lucide-react";
-import { InventoryStatus } from "@/types/api";
+import { StockStatus } from "@/types/api";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -174,24 +174,24 @@ const ErrorMessage = styled.div`
   margin-top: ${theme.spacing.xs};
 `;
 
-interface AddInventoryModalProps {
+interface AddStockModalProps {
   onClose: () => void;
   onSave: (data: {
     name: string;
     stock: number;
     price: number;
-    status: InventoryStatus;
+    status: StockStatus;
   }) => Promise<void>;
 }
 
-export default function AddInventoryModal({
+export default function AddStockModal({
   onClose,
   onSave,
-}: AddInventoryModalProps) {
+}: AddStockModalProps) {
   const [name, setName] = useState("");
   const [stock, setStock] = useState("");
   const [price, setPrice] = useState("");
-  const [status, setStatus] = useState<InventoryStatus>("ON_SALE");
+  const [status, setStatus] = useState<StockStatus>("ON_SALE");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -229,7 +229,7 @@ export default function AddInventoryModal({
       });
       onClose();
     } catch (err) {
-      console.error("Failed to add inventory:", err);
+      console.error("Failed to add stock:", err);
       setErrors({ submit: "상품 등록에 실패했습니다." });
     } finally {
       setLoading(false);

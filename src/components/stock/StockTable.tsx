@@ -2,10 +2,10 @@
 
 import styled from '@emotion/styled';
 import { AlertTriangle, TrendingDown, TrendingUp } from 'lucide-react';
-import { InventoryItem } from '@/data/inventory';
+import { StockItem } from '@/types/stock';
 import { theme } from '@/styles/theme';
 
-const InventoryTableWrapper = styled.div`
+const StockTableWrapper = styled.div`
   background: ${theme.colors.background.darker};
   border: 1px solid ${theme.colors.border.dark};
   border-radius: ${theme.borderRadius.lg};
@@ -120,13 +120,13 @@ const getIcon = (level: string) => {
   return icons[level as keyof typeof icons];
 };
 
-interface InventoryTableProps {
-  items: InventoryItem[];
+interface StockTableProps {
+  items: StockItem[];
 }
 
-export default function InventoryTable({ items }: InventoryTableProps) {
+export default function StockTable({ items }: StockTableProps) {
   return (
-    <InventoryTableWrapper>
+    <StockTableWrapper>
       <Table>
         <TableHeader>
           <tr>
@@ -169,6 +169,6 @@ export default function InventoryTable({ items }: InventoryTableProps) {
           })}
         </tbody>
       </Table>
-    </InventoryTableWrapper>
+    </StockTableWrapper>
   );
 }

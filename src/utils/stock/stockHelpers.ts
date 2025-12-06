@@ -1,33 +1,33 @@
-import { InventoryItem } from "@/types/inventory";
+import { StockItem } from "@/types/stock";
 
 /**
  * 재고 레벨별 통계 계산
  */
-export const calculateStockLevels = (inventory: InventoryItem[]) => ({
-  low: inventory.filter((item) => item.stockLevel === "low").length,
-  medium: inventory.filter((item) => item.stockLevel === "medium").length,
-  good: inventory.filter((item) => item.stockLevel === "good").length,
-  total: inventory.length,
+export const calculateStockLevels = (stock: StockItem[]) => ({
+  low: stock.filter((item) => item.stockLevel === "low").length,
+  medium: stock.filter((item) => item.stockLevel === "medium").length,
+  good: stock.filter((item) => item.stockLevel === "good").length,
+  total: stock.length,
 });
 
 /**
  * 재고 레벨별 필터링
  */
 export const filterByStockLevel = (
-  inventory: InventoryItem[],
+  stock: StockItem[],
   level: "low" | "medium" | "good"
-): InventoryItem[] => {
-  return inventory.filter((item) => item.stockLevel === level);
+): StockItem[] => {
+  return stock.filter((item) => item.stockLevel === level);
 };
 
 /**
  * 카테고리별 필터링
  */
 export const filterByCategory = (
-  inventory: InventoryItem[],
+  stock: StockItem[],
   category: string
-): InventoryItem[] => {
-  return inventory.filter((item) => item.category === category);
+): StockItem[] => {
+  return stock.filter((item) => item.category === category);
 };
 
 /**

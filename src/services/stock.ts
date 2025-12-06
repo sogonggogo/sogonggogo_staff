@@ -2,34 +2,34 @@
 
 import { apiClient } from "./client";
 import {
-  InventoryItem,
-  InventoryStatus,
-  CreateInventoryRequest,
-  UpdateInventoryStatusRequest,
-  UpdateInventoryStockRequest,
+  StockItem,
+  StockStatus,
+  CreateStockRequest,
+  UpdateStockStatusRequest,
+  UpdateStockRequest,
 } from "@/types/api";
 
 /**
  * 재고 목록 조회
  * @param status - 재고 상태 필터 (선택사항)
  */
-export async function getInventory(
-  status?: InventoryStatus
-): Promise<InventoryItem[]> {
+export async function getStock(
+  status?: StockStatus
+): Promise<StockItem[]> {
   const endpoint = status
     ? `/api/staff/inventory?status=${status}`
     : "/api/staff/inventory";
-  return apiClient.get<InventoryItem[]>(endpoint);
+  return apiClient.get<StockItem[]>(endpoint);
 }
 
 /**
  * 새 재고 항목 등록
  * @param data - 재고 생성 데이터
  */
-export async function createInventoryItem(
-  data: CreateInventoryRequest
-): Promise<InventoryItem> {
-  return apiClient.post<InventoryItem>("/api/staff/inventory", data);
+export async function createStockItem(
+  data: CreateStockRequest
+): Promise<StockItem> {
+  return apiClient.post<StockItem>("/api/staff/inventory", data);
 }
 
 /**
@@ -37,11 +37,11 @@ export async function createInventoryItem(
  * @param id - 재고 ID
  * @param status - 변경할 상태
  */
-export async function updateInventoryStatus(
+export async function updateStockStatus(
   id: number,
-  status: InventoryStatus
+  status: StockStatus
 ): Promise<void> {
-  const data: UpdateInventoryStatusRequest = { status };
+  const data: UpdateStockStatusRequest = { status };
   return apiClient.patch<void>(`/api/staff/inventory/${id}/status`, data);
 }
 
@@ -50,11 +50,11 @@ export async function updateInventoryStatus(
  * @param id - 재고 ID
  * @param stock - 변경할 재고 수량
  */
-export async function updateInventoryStock(
+export async function updateStock(
   id: number,
   stock: number
 ): Promise<void> {
-  const data: UpdateInventoryStockRequest = { stock };
+  const data: UpdateStockRequest = { stock };
   return apiClient.patch<void>(`/api/staff/inventory/${id}/stock`, data);
 }
 
@@ -62,7 +62,7 @@ export async function updateInventoryStock(
  * 재고 항목 삭제
  * @param id - 재고 ID
  */
-export async function deleteInventoryItem(id: number): Promise<void> {
+export async function deleteStockItem(id: number): Promise<void> {
   return apiClient.delete<void>(`/api/staff/inventory/${id}`);
 }
 

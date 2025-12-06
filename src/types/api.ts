@@ -9,7 +9,7 @@ export type OrderStatus =
   | "COMPLETED"
   | "REJECTED";
 
-export type InventoryStatus = "ON_SALE" | "STOPPED";
+export type StockStatus = "ON_SALE" | "STOPPED";
 
 export interface Customer {
   email: string;
@@ -65,26 +65,26 @@ export interface Order {
   orderItems: OrderItem[];
 }
 
-export interface InventoryItem {
+export interface StockItem {
   id: number;
   name: string;
   stock: number;
   price: number;
-  status: InventoryStatus;
+  status: StockStatus;
 }
 
-export interface CreateInventoryRequest {
+export interface CreateStockRequest {
   name: string;
   stock: number;
   price: number;
-  status: InventoryStatus;
+  status: StockStatus;
 }
 
-export interface UpdateInventoryStatusRequest {
-  status: InventoryStatus;
+export interface UpdateStockStatusRequest {
+  status: StockStatus;
 }
 
-export interface UpdateInventoryStockRequest {
+export interface UpdateStockRequest {
   stock: number;
 }
 

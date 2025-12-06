@@ -1,14 +1,14 @@
-import { InventoryItem } from "@/types/inventory";
+import { StockItem } from "@/types/stock";
 
 export interface TableColumn {
   id: string;
   label: string;
   width?: string;
   sortable?: boolean;
-  render?: (item: InventoryItem) => React.ReactNode;
+  render?: (item: StockItem) => React.ReactNode;
 }
 
-export const inventoryTableColumns: TableColumn[] = [
+export const stockTableColumns: TableColumn[] = [
   {
     id: "select",
     label: "선택",

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
-import { UIInventoryItem } from "@/utils/inventory/inventoryAdapter";
+import { UIStockItem } from "@/utils/stock/stockAdapter";
 import { X } from "lucide-react";
 
 const ModalOverlay = styled.div`
@@ -221,7 +221,7 @@ const StockValue = styled.span<{ type: "current" | "new" }>`
 `;
 
 interface StockManageModalProps {
-  item: UIInventoryItem;
+  item: UIStockItem;
   onClose: () => void;
   onSave: (itemId: number, newQuantity: number) => void;
 }

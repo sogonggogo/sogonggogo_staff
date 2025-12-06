@@ -38,19 +38,19 @@ const StatValue = styled.div<{ color?: string }>`
   color: ${({ color }) => color || theme.colors.brand.blue};
 `;
 
-interface InventoryStatsProps {
+interface StockStatsProps {
   totalItems: number;
   lowStockCount: number;
   mediumStockCount: number;
   goodStockCount: number;
 }
 
-export default function InventoryStats({
+export default function StockStats({
   totalItems,
   lowStockCount,
   mediumStockCount,
   goodStockCount
-}: InventoryStatsProps) {
+}: StockStatsProps) {
   return (
     <StatsContainer>
       <StatCard>

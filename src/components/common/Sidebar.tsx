@@ -82,7 +82,7 @@ function SidebarContent() {
 
   const isProcessing = pathname === "/" && (!tab || tab === "processing");
   const isCompleted = pathname === "/" && tab === "completed";
-  const isInventory = pathname === "/inventory";
+  const isStock = pathname === "/stock";
 
   return (
     <SidebarContainer>
@@ -95,7 +95,7 @@ function SidebarContent() {
         <ClipboardCheck size={24} strokeWidth={2} />
         <NavText>완료</NavText>
       </NavButton>
-      <NavButton href="/inventory" isActive={isInventory}>
+      <NavButton href="/stock" isActive={isStock}>
         <Package size={24} strokeWidth={2} />
         <NavText>재고 관리</NavText>
       </NavButton>
@@ -121,7 +121,7 @@ export default function Sidebar() {
             <ClipboardCheck size={24} strokeWidth={2} />
             <NavText>완료</NavText>
           </NavButton>
-          <NavButton href="/inventory" isActive={false}>
+          <NavButton href="/stock" isActive={false}>
             <Package size={24} strokeWidth={2} />
             <NavText>재고 관리</NavText>
           </NavButton>

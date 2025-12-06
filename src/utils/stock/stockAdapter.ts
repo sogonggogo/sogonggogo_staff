@@ -1,8 +1,8 @@
 // API 응답과 UI 모델 간 변환 어댑터
 
-import { InventoryItem as ApiInventoryItem } from "@/types/api";
+import { StockItem as ApiStockItem } from "@/types/api";
 
-export interface UIInventoryItem {
+export interface UIStockItem {
   id: number;
   productId: string;
   name: string;
@@ -80,9 +80,9 @@ const getExpectedPrice = (price: number): number => {
 /**
  * API 응답을 UI 모델로 변환
  */
-export function apiToUIInventory(
-  apiItem: ApiInventoryItem
-): UIInventoryItem {
+export function apiToUIStock(
+  apiItem: ApiStockItem
+): UIStockItem {
   const category = getCategory(apiItem.name);
   const unit = getUnit(apiItem.name);
   const minStock = 20; // 기본값 (실제로는 별도 관리 필요)

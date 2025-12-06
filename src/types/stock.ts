@@ -1,6 +1,6 @@
 // 재고 관련 타입 정의
 
-export interface InventoryItem {
+export interface StockItem {
   id: number;
   productId: string;
   name: string;

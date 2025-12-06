@@ -48,8 +48,8 @@ export const theme = {
       danger: '#ef4444',
     },
 
-    // Inventory colors
-    inventory: {
+    // Stock colors
+    stock: {
       cardBg: '#1e2939',
       headerBg: '#0a0f19',
       badgeBg: '#364153',

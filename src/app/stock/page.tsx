@@ -5,26 +5,26 @@ import styled from "@emotion/styled";
 import { theme } from "@/styles/theme";
 import { ChevronDown } from "lucide-react";
 import {
-  inventoryTableColumns,
+  stockTableColumns,
   saleStatusOptions,
   pageSizeOptions,
   type SaleStatusType,
-} from "@/constants/inventoryTableConfig";
-import StockManageModal from "@/components/inventory/StockManageModal";
-import AddInventoryModal from "@/components/inventory/AddInventoryModal";
-import { InventoryStatus } from "@/types/api";
+} from "@/constants/stockTableConfig";
+import StockManageModal from "@/components/stock/StockManageModal";
+import AddStockModal from "@/components/stock/AddStockModal";
+import { StockStatus } from "@/types/api";
 import {
-  getInventory,
-  updateInventoryStatus,
-  updateInventoryStock,
-  deleteInventoryItem,
-  createInventoryItem,
-} from "@/services/inventory";
+  getStock,
+  updateStockStatus,
+  updateStock,
+  deleteStockItem,
+  createStockItem,
+} from "@/services/stock";
 import {
-  UIInventoryItem,
-  apiToUIInventory,
+  UIStockItem,
+  apiToUIStock,
   uiToApiStatus,
-} from "@/utils/inventory/inventoryAdapter";
+} from "@/utils/stock/stockAdapter";
 
 const Container = styled.div`
   padding: ${theme.spacing.xxxl};
@@ -371,7 +371,7 @@ const PriceText = styled.span`
 // Dynamic export를 사용하여 SSR 비활성화
 export const dynamic = "force-dynamic";
 
-export default function InventoryPage() {
+export default function StockPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isProductCategoryDropdownOpen, setIsProductCategoryDropdownOpen] =
     useState(false);
@@ -380,9 +380,9 @@ export default function InventoryPage() {
   const [saleStatus, setSaleStatus] = useState<SaleStatusType>("전체");
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedItemForModal, setSelectedItemForModal] =
-    useState<UIInventoryItem | null>(null);
+    useState<UIStockItem | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [inventory, setInventory] = useState<UIInventoryItem[]>([]);
+  const [stock, setStock] = useState<UIStockItem[]>([]);
   const [isSaleStatusDropdownOpen, setIsSaleStatusDropdownOpen] =
     useState(false);
   const [loading, setLoading] = useState(true);
@@ -390,32 +390,32 @@ export default function InventoryPage() {
 
   // 재고 데이터 가져오기
   useEffect(() => {
-    const fetchInventory = async () => {
+    const fetchStock = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getInventory();
-        const uiData = data.map(apiToUIInventory);
-        setInventory(uiData);
+        const data = await getStock();
+        const uiData = data.map(apiToUIStock);
+        setStock(uiData);
       } catch (err) {
-        console.error("Failed to fetch inventory:", err);
+        console.error("Failed to fetch stock:", err);
         setError("재고 데이터를 불러오는데 실패했습니다.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchInventory();
+    fetchStock();
   }, []);
 
   // 데이터에서 고유한 카테고리 추출
   const uniqueCategories = [
     "전체",
-    ...Array.from(new Set(inventory.map((item) => item.category))),
+    ...Array.from(new Set(stock.map((item) => item.category))),
   ];
 
   // 재고 관리 모달 열기
-  const handleOpenStockModal = (item: UIInventoryItem) => {
+  const handleOpenStockModal = (item: UIStockItem) => {
     setSelectedItemForModal(item);
   };
 
@@ -427,10 +427,10 @@ export default function InventoryPage() {
   // 재고 저장
   const handleSaveStock = async (itemId: number, newQuantity: number) => {
     try {
-      await updateInventoryStock(itemId, newQuantity);
+      await updateStock(itemId, newQuantity);
 
       // UI 업데이트
-      setInventory((prev) =>
+      setStock((prev) =>
         prev.map((item) =>
           item.id === itemId ? { ...item, quantity: newQuantity } : item
         )
@@ -455,11 +455,11 @@ export default function InventoryPage() {
 
       // 모든 선택된 항목의 상태 변경
       await Promise.all(
-        selectedItems.map((itemId) => updateInventoryStatus(itemId, apiStatus))
+        selectedItems.map((itemId) => updateStockStatus(itemId, apiStatus))
       );
 
       // UI 업데이트
-      setInventory((prev) =>
+      setStock((prev) =>
         prev.map((item) =>
           selectedItems.includes(item.id)
             ? { ...item, saleStatus: newStatus }
@@ -477,19 +477,19 @@ export default function InventoryPage() {
   };
 
   // 상품 등록
-  const handleAddInventory = async (data: {
+  const handleAddStock = async (data: {
     name: string;
     stock: number;
     price: number;
-    status: InventoryStatus;
+    status: StockStatus;
   }) => {
     try {
-      const newItem = await createInventoryItem(data);
-      const uiItem = apiToUIInventory(newItem);
-      setInventory((prev) => [...prev, uiItem]);
+      const newItem = await createStockItem(data);
+      const uiItem = apiToUIStock(newItem);
+      setStock((prev) => [...prev, uiItem]);
       alert("상품이 등록되었습니다.");
     } catch (err) {
-      console.error("Failed to add inventory:", err);
+      console.error("Failed to add stock:", err);
       throw err;
     }
   };
@@ -509,11 +509,11 @@ export default function InventoryPage() {
     try {
       // 모든 선택된 항목 삭제
       await Promise.all(
-        selectedItems.map((itemId) => deleteInventoryItem(itemId))
+        selectedItems.map((itemId) => deleteStockItem(itemId))
       );
 
       // UI 업데이트
-      setInventory((prev) =>
+      setStock((prev) =>
         prev.filter((item) => !selectedItems.includes(item.id))
       );
 
@@ -526,7 +526,7 @@ export default function InventoryPage() {
   };
 
   // 테이블 셀 렌더링 함수
-  const renderCell = (columnId: string, item: UIInventoryItem) => {
+  const renderCell = (columnId: string, item: UIStockItem) => {
     switch (columnId) {
       case "select":
         return (
@@ -557,7 +557,7 @@ export default function InventoryPage() {
     }
   };
 
-  const filteredItems = inventory.filter((item) => {
+  const filteredItems = stock.filter((item) => {
     // 검색어 필터링 (상품명 또는 상품ID)
     const matchesSearch = searchTerm
       ? item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -737,7 +737,7 @@ export default function InventoryPage() {
         <Table>
           <TableHeader>
             <tr>
-              {inventoryTableColumns.map((column) => (
+              {stockTableColumns.map((column) => (
                 <Th key={column.id} width={column.width}>
                   {column.label}
                   {column.sortable && (
@@ -750,7 +750,7 @@ export default function InventoryPage() {
           <tbody>
             {filteredItems.map((item) => (
               <Tr key={item.id}>
-                {inventoryTableColumns.map((column) => (
+                {stockTableColumns.map((column) => (
                   <Td key={column.id}>{renderCell(column.id, item)}</Td>
                 ))}
               </Tr>
@@ -768,9 +768,9 @@ export default function InventoryPage() {
       )}
 
       {isAddModalOpen && (
-        <AddInventoryModal
+        <AddStockModal
           onClose={() => setIsAddModalOpen(false)}
-          onSave={handleAddInventory}
+          onSave={handleAddStock}
         />
       )}
     </Container>
