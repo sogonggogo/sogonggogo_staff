@@ -272,7 +272,6 @@ export default function OrderDetail({
 }: OrderDetailProps) {
   const [activeTab, setActiveTab] = useState<"order" | "delivery">("order");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   if (!order) {
     return (
@@ -289,7 +288,6 @@ export default function OrderDetail({
   ) => {
     try {
       setLoading(true);
-      setError(null);
       await action();
       alert(successMessage);
       onOrderUpdate(); // 주문 목록 갱신
@@ -315,7 +313,6 @@ export default function OrderDetail({
         errorMessage = err.message;
       }
       
-      setError(errorMessage);
       alert(errorMessage);
     } finally {
       setLoading(false);

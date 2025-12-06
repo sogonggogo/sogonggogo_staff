@@ -1,4 +1,4 @@
-import { Order, OrderStatus } from "@/data/orders";
+import { Order, OrderStatus } from "@/types/api";
 
 /**
  * 주문 상태별 필터링
@@ -19,15 +19,15 @@ export const filterOrdersByCompletion = (
   completed: boolean
 ): Order[] => {
   return completed
-    ? orders.filter((order) => order.status === "delivered")
-    : orders.filter((order) => order.status !== "delivered");
+    ? orders.filter((order) => order.status === "COMPLETED")
+    : orders.filter((order) => order.status !== "COMPLETED");
 };
 
 /**
  * 신규 주문 필터링 (승인 대기중)
  */
 export const filterNewOrders = (orders: Order[]): Order[] => {
-  return orders.filter((order) => order.status === "pending");
+  return orders.filter((order) => order.status === "PENDING");
 };
 
 /**
@@ -35,6 +35,6 @@ export const filterNewOrders = (orders: Order[]): Order[] => {
  */
 export const filterInProgressOrders = (orders: Order[]): Order[] => {
   return orders.filter(
-    (order) => order.status === "preparing" || order.status === "delivering"
+    (order) => order.status === "COOKING" || order.status === "IN_DELIVERY"
   );
 };

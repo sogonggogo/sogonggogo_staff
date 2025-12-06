@@ -78,7 +78,6 @@ const saleStatusOptions = ["전체", "판매중", "판매중지"] as const;
 type SaleStatusType = (typeof saleStatusOptions)[number];
 
 const pageSizeOptions = [20, 50, 100] as const;
-type PageSizeType = (typeof pageSizeOptions)[number];
 
 const Container = styled.div`
   padding: ${theme.spacing.xxxl};
