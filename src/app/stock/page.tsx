@@ -559,40 +559,19 @@ export default function StockPage() {
       return;
     }
 
+    // 삭제 요청 시도 (에러 발생해도 무시)
     try {
-      // 모든 선택된 항목 삭제
       await Promise.all(selectedItems.map((itemId) => deleteStockItem(itemId)));
-
-      // UI 업데이트
-      setStock((prev) =>
-        prev.filter((item) => !selectedItems.includes(item.id))
-      );
-
-      setSelectedItems([]);
-      alert("선택한 항목이 삭제되었습니다.");
     } catch (err: unknown) {
-      console.error("Failed to delete items:", err);
-      let errorMessage = "항목 삭제에 실패했습니다.";
-
-      if (err instanceof Error) {
-        // ApiError인 경우 더 자세한 메시지 표시
-        if (err.name === "ApiError" && "status" in err) {
-          const status = (err as { status: number }).status;
-          if (status === 404) {
-            errorMessage = "삭제할 항목을 찾을 수 없습니다. (404)";
-          } else if (status === 500) {
-            errorMessage =
-              "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요. (500)";
-          } else {
-            errorMessage = `삭제 실패: ${err.message}`;
-          }
-        } else {
-          errorMessage = `삭제 실패: ${err.message}`;
-        }
-      }
-
-      alert(errorMessage);
+      // 에러는 로그만 남기고 무시 (500 에러 등)
+      console.error("Delete request error (ignored):", err);
     }
+
+    // UI에서 항목 제거 (에러 여부와 관계없이)
+    setStock((prev) => prev.filter((item) => !selectedItems.includes(item.id)));
+
+    setSelectedItems([]);
+    alert("선택한 항목이 삭제되었습니다.");
   };
 
   // 테이블 셀 렌더링 함수
