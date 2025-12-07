@@ -560,38 +560,69 @@ export default function StockPage() {
     }
 
     try {
-      // 모든 선택된 항목 삭제
-      await Promise.all(selectedItems.map((itemId) => deleteStockItem(itemId)));
-
-      // UI 업데이트
-      setStock((prev) =>
-        prev.filter((item) => !selectedItems.includes(item.id))
+      // 모든 선택된 항목 삭제 시도
+      const deleteResults = await Promise.allSettled(
+        selectedItems.map((itemId) => deleteStockItem(itemId))
       );
 
-      setSelectedItems([]);
-      alert("선택한 항목이 삭제되었습니다.");
-    } catch (err: unknown) {
-      console.error("Failed to delete items:", err);
-      let errorMessage = "항목 삭제에 실패했습니다.";
+      // 성공한 항목과 실패한 항목 분리
+      const successfulDeletes: number[] = [];
+      const failedDeletes: number[] = [];
 
-      if (err instanceof Error) {
-        // ApiError인 경우 더 자세한 메시지 표시
-        if (err.name === "ApiError" && "status" in err) {
-          const status = (err as { status: number }).status;
-          if (status === 404) {
-            errorMessage = "삭제할 항목을 찾을 수 없습니다. (404)";
-          } else if (status === 500) {
-            errorMessage =
-              "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요. (500)";
-          } else {
-            errorMessage = `삭제 실패: ${err.message}`;
-          }
+      deleteResults.forEach((result, index) => {
+        if (result.status === "fulfilled") {
+          successfulDeletes.push(selectedItems[index]);
         } else {
-          errorMessage = `삭제 실패: ${err.message}`;
+          failedDeletes.push(selectedItems[index]);
+          console.error(`Failed to delete item ${selectedItems[index]}:`, result.reason);
         }
+      });
+
+      // 성공한 항목은 UI에서 제거
+      if (successfulDeletes.length > 0) {
+        setStock((prev) =>
+          prev.filter((item) => !successfulDeletes.includes(item.id))
+        );
       }
 
-      alert(errorMessage);
+      // 삭제 후 목록을 다시 불러와서 동기화 (실패한 항목도 다시 확인)
+      try {
+        const data = await getStock();
+        const uiData = data.map(apiToUIStock);
+        setStock(uiData);
+      } catch (refreshError) {
+        console.error("Failed to refresh stock list:", refreshError);
+      }
+
+      setSelectedItems([]);
+
+      // 결과 메시지 표시
+      if (successfulDeletes.length === selectedItems.length) {
+        alert("선택한 항목이 모두 삭제되었습니다.");
+      } else if (successfulDeletes.length > 0) {
+        alert(
+          `${successfulDeletes.length}개 항목이 삭제되었습니다. 일부 항목 삭제에 실패했을 수 있지만, 목록을 새로고침했습니다.`
+        );
+      } else {
+        // 모든 삭제가 실패했지만 목록을 새로고침했으므로 실제 상태 확인
+        alert(
+          "삭제 중 오류가 발생했습니다. 목록을 새로고침하여 실제 상태를 확인했습니다."
+        );
+      }
+    } catch (err: unknown) {
+      console.error("Failed to delete items:", err);
+      
+      // 예상치 못한 에러 발생 시에도 목록 새로고침
+      try {
+        const data = await getStock();
+        const uiData = data.map(apiToUIStock);
+        setStock(uiData);
+      } catch (refreshError) {
+        console.error("Failed to refresh stock list:", refreshError);
+      }
+
+      setSelectedItems([]);
+      alert("삭제 중 오류가 발생했습니다. 목록을 새로고침하여 실제 상태를 확인했습니다.");
     }
   };
 

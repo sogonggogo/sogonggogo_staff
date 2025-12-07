@@ -38,8 +38,22 @@ async function fetchApi<T>(
       },
     });
 
+    // 204 No Content 응답 처리 (에러 체크 전에)
+    if (response.status === 204) {
+      return {} as T;
+    }
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
+      let errorData = null;
+      try {
+        const text = await response.text();
+        if (text) {
+          errorData = JSON.parse(text);
+        }
+      } catch {
+        // JSON 파싱 실패 시 무시
+      }
+      
       // 404 에러의 경우 더 자세한 정보 로깅
       if (response.status === 404) {
         console.error(`404 Not Found: ${options?.method || 'GET'} ${url}`, {
@@ -51,12 +65,19 @@ async function fetchApi<T>(
       throw new ApiError(response.status, response.statusText, errorData);
     }
 
-    // 204 No Content 응답 처리
-    if (response.status === 204) {
-      return {} as T;
+    // 응답 본문이 있는 경우에만 JSON 파싱
+    const contentType = response.headers.get("content-type");
+    if (contentType?.includes("application/json")) {
+      try {
+        return await response.json();
+      } catch {
+        // JSON 파싱 실패 시 빈 객체 반환
+        return {} as T;
+      }
     }
 
-    return await response.json();
+    // JSON이 아닌 경우 빈 객체 반환
+    return {} as T;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

@@ -60,20 +60,33 @@ export async function DELETE(
       );
     }
 
-    // 204 No Content 또는 200 OK 응답 처리
+    // 204 No Content 응답 처리
     if (response.status === 204) {
-      return new NextResponse(null, { status: 204 });
+      return new NextResponse(null, {
+        status: 204,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     }
 
-    // 응답 본문이 있는 경우
+    // 200 OK 등 다른 성공 응답 처리
     const contentType = response.headers.get("content-type");
     if (contentType?.includes("application/json")) {
-      const data = await response.json().catch(() => ({}));
-      return NextResponse.json(data, { status: response.status });
+      try {
+        const data = await response.json();
+        return NextResponse.json(data, { status: response.status });
+      } catch {
+        // JSON 파싱 실패 시 빈 객체 반환
+        return NextResponse.json(
+          { success: true },
+          { status: response.status }
+        );
+      }
     }
 
-    // JSON이 아닌 경우 빈 응답
-    return new NextResponse(null, { status: response.status });
+    // JSON이 아닌 경우 성공 응답으로 처리
+    return NextResponse.json({ success: true }, { status: response.status });
   } catch (error) {
     console.error("[DELETE] Error proxying request:", error);
 
